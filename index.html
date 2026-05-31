@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ระบบค้นหาราคาวัสดุก่อสร้าง</title>
+    <title>Pricelist วัสดุก่อสร้างระดับโปร</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -45,7 +45,7 @@
             <div class="px-4 py-3 sm:px-6 sm:py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 z-10 shrink-0 transition-colors">
                 <div class="w-full flex justify-between items-center md:block">
                     <div>
-                        <h1 class="text-lg sm:text-xl font-bold text-blue-900 dark:text-blue-400">ระบบค้นหาราคาวัสดุก่อสร้าง</h1>
+                        <h1 class="text-lg sm:text-xl font-bold text-blue-900 dark:text-blue-400">Pricelist วัสดุก่อสร้าง</h1>
                         <p class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
                             ทั้งหมด <span id="totalRecordCount" class="font-semibold text-blue-600 dark:text-blue-400">0</span> รายการ
                             <span id="loadingIndicator" class="text-blue-500 dark:text-blue-400 font-medium animate-pulse hidden ml-1">(กำลังประมวลผล...)</span>
@@ -275,7 +275,7 @@
     <!-- ========================================== -->
     <!-- DEFAULT CSV DATABASES -->
     <!-- ========================================== -->
-
+ 
     <!-- 1. ขอนแก่น -->
     <script id="csv-khonkaen" type="text/csv">
 ระยะเวลา  เมษายน 2569,,,,,,,,,
@@ -5911,6 +5911,7 @@
 
     </script>
 
+
     <!-- ========================================== -->
     <!-- APPLICATION SCRIPT -->
     <!-- ========================================== -->
@@ -6576,6 +6577,35 @@
         updateFiltersUI();
         applyFilters();
         makeTableResizable();
+
+        // --- 9. SECURITY & ANTI-COPY ---
+        // ปิดการคลิกขวา (Context Menu)
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // ปิดปุ่มลัดต่างๆ (Save As, View Source, Inspect Element)
+        document.addEventListener('keydown', (e) => {
+            // ปิด F12 (DevTools)
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+            // ปิด Ctrl+S / Cmd+S (Save As)
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+                e.preventDefault();
+                alert('⚠️ สงวนสิทธิ์ ไม่อนุญาตให้บันทึกหรือคัดลอกหน้าเว็บนี้');
+                return false;
+            }
+            // ปิด Ctrl+U / Cmd+U (View Source)
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'u') {
+                e.preventDefault();
+                return false;
+            }
+            // ปิด Ctrl+Shift+I, J, C / Cmd+Option+I, J, C (DevTools)
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) {
+                e.preventDefault();
+                return false;
+            }
+        });
 
     </script>
 </body>
