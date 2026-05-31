@@ -6,107 +6,116 @@
     <title>Pricelist วัสดุก่อสร้างระดับโปร</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // เปิดใช้งาน Dark Mode แบบ Class-based
+            theme: { extend: {} }
+        }
+    </script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Custom scrollbar for better look */
+        /* Custom Scrollbar for Light & Dark Mode */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+        
+        .dark ::-webkit-scrollbar-track { background: #1f2937; }
+        .dark ::-webkit-scrollbar-thumb { background: #4b5563; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* Hide number input arrows for page input */
+        /* Hide number input arrows */
         input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { 
-            -webkit-appearance: none; 
-            margin: 0; 
-        }
-        input[type=number] {
-            -moz-appearance: textfield;
-        }
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen relative text-gray-800">
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen relative text-gray-800 dark:text-gray-200 transition-colors duration-200">
 
-    <!-- Main View -->
+    <!-- ========================================== -->
+    <!-- MAIN VIEW -->
+    <!-- ========================================== -->
     <div id="mainView" class="flex min-h-screen p-2 sm:p-4 md:p-6 flex-col">
-        <div class="max-w-[1400px] w-full mx-auto bg-white rounded-xl shadow-md overflow-hidden flex flex-col h-[96dvh] md:h-[92vh]">
+        <div class="max-w-[1400px] w-full mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden flex flex-col h-[96dvh] md:h-[92vh] transition-colors duration-200 border border-transparent dark:border-gray-700">
             
-            <!-- Header -->
-            <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200 bg-white flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-4 z-10 shrink-0">
+            <!-- HEADER -->
+            <div class="px-4 py-3 sm:px-6 sm:py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 z-10 shrink-0 transition-colors">
                 <div class="w-full flex justify-between items-center md:block">
                     <div>
-                        <h1 class="text-xl sm:text-2xl font-bold text-blue-900">Pricelist วัสดุก่อสร้าง</h1>
-                        <p class="text-xs sm:text-sm text-gray-500 mt-0.5 flex items-center gap-2">
-                            ทั้งหมด <span id="totalRecordCount" class="font-semibold text-blue-600">0</span> รายการ
-                            <span id="loadingIndicator" class="text-blue-500 font-medium animate-pulse hidden ml-2 text-[10px] sm:text-xs">
-                                (กำลังประมวลผลไฟล์...)
-                            </span>
+                        <h1 class="text-lg sm:text-xl font-bold text-blue-900 dark:text-blue-400">Pricelist วัสดุก่อสร้าง</h1>
+                        <p class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
+                            ทั้งหมด <span id="totalRecordCount" class="font-semibold text-blue-600 dark:text-blue-400">0</span> รายการ
+                            <span id="loadingIndicator" class="text-blue-500 dark:text-blue-400 font-medium animate-pulse hidden ml-1">(กำลังประมวลผล...)</span>
                         </p>
                     </div>
                     
-                    <!-- Credit & Changelog Button (Mobile shows here on top right) -->
-                    <button id="changelogBtn" class="md:hidden text-right flex flex-col items-end hover:bg-gray-50 p-1 rounded-lg transition-colors cursor-pointer group border border-transparent">
-                        <span class="text-[9px] text-gray-500 group-hover:text-blue-600 transition-colors">พัฒนาโดย K.Mookleemas</span>
-                        <span class="text-[11px] font-bold text-gray-700 flex items-center gap-1">
-                            <span id="headerVersionTextMobile">V.0</span>
-                        </span>
-                    </button>
+                    <div class="flex items-center gap-2">
+                        <!-- Theme Toggle (Mobile) -->
+                        <button class="themeToggleBtn md:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 rounded-lg transition-colors">
+                            <i data-lucide="moon" class="themeIcon w-4 h-4"></i>
+                        </button>
+                        <!-- Changelog Button (Mobile) -->
+                        <button id="changelogBtn" class="md:hidden text-right flex flex-col items-end hover:bg-gray-50 dark:hover:bg-gray-700 p-1 rounded-lg transition-colors cursor-pointer group">
+                            <span class="text-[9px] text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400">พัฒนาโดย K.Mookleemas</span>
+                            <span class="text-[11px] font-bold text-gray-700 dark:text-gray-300"><span id="headerVersionTextMobile">V.0</span></span>
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-start md:justify-end">
-                    <!-- เพิ่มไฟล์ CSV -->
-                    <label class="cursor-pointer bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg transition-colors flex items-center gap-1.5 text-xs sm:text-sm font-medium">
-                        <i data-lucide="file-plus" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> เพิ่มฐานราคา
+                    <label class="cursor-pointer bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/50 px-2.5 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 text-xs sm:text-sm font-medium">
+                        <i data-lucide="file-plus" class="w-3.5 h-3.5"></i> เพิ่มฐานราคา
                         <input type="file" id="fileInput" multiple accept=".csv" class="hidden" />
                     </label>
 
-                    <!-- Export CSV -->
-                    <button id="exportBtn" class="bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg transition-colors flex items-center gap-1.5 text-xs sm:text-sm font-medium">
-                        <i data-lucide="download" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> Export
+                    <button id="exportBtn" class="bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 px-2.5 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 text-xs sm:text-sm font-medium">
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
                     </button>
 
-                    <!-- ล้างข้อมูล -->
-                    <button id="clearDataBtn" class="text-xs sm:text-sm text-red-500 hover:text-red-700 hover:bg-red-50 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg transition-colors flex items-center gap-1 border border-transparent hover:border-red-100">
-                        <i data-lucide="trash-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> ล้างข้อมูล
+                    <button id="clearDataBtn" class="text-xs sm:text-sm text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 px-2.5 py-1.5 rounded-lg transition-colors flex items-center gap-1 border border-transparent hover:border-red-100 dark:hover:border-red-900/30">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> ล้างข้อมูล
                     </button>
                     
-                    <div class="h-8 w-px bg-gray-200 mx-2 hidden md:block"></div>
+                    <div class="h-6 w-px bg-gray-200 dark:bg-gray-700 mx-1 hidden md:block"></div>
 
-                    <!-- Credit & Changelog Button (Desktop) -->
-                    <button id="changelogBtnDesktop" class="hidden md:flex text-right flex-col items-end hover:bg-gray-50 p-1.5 rounded-lg transition-colors cursor-pointer group border border-transparent hover:border-gray-200">
-                        <span class="text-[10px] text-gray-500 group-hover:text-blue-600 transition-colors">พัฒนาโดย Khanitchan Mookleemas</span>
-                        <span class="text-xs font-bold text-gray-700 group-hover:text-blue-700 transition-colors flex items-center gap-1">
+                    <!-- Theme Toggle (Desktop) -->
+                    <button class="themeToggleBtn hidden md:flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 rounded-lg transition-colors border border-transparent hover:border-gray-200 dark:hover:border-gray-600">
+                        <i data-lucide="moon" class="themeIcon w-4 h-4"></i>
+                    </button>
+
+                    <!-- Changelog Button (Desktop) -->
+                    <button id="changelogBtnDesktop" class="hidden md:flex text-right flex-col items-end hover:bg-gray-50 dark:hover:bg-gray-700 px-1.5 py-1 rounded-lg transition-colors cursor-pointer group border border-transparent hover:border-gray-200 dark:hover:border-gray-600">
+                        <span class="text-[9px] text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">พัฒนาโดย Khanitchan Mookleemas</span>
+                        <span class="text-[11px] font-bold text-gray-700 dark:text-gray-300 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors flex items-center gap-1">
                             <span id="headerVersionText">V.0 30/05/69</span>
-                            <i data-lucide="info" class="w-3 h-3 text-gray-400 group-hover:text-blue-500"></i>
+                            <i data-lucide="info" class="w-3 h-3 text-gray-400 dark:text-gray-500 group-hover:text-blue-500"></i>
                         </span>
                     </button>
                 </div>
             </div>
 
-            <!-- Filters Panel -->
-            <div class="px-4 py-3 sm:px-6 sm:py-4 bg-gray-50 border-b border-gray-200 flex flex-col gap-2 sm:gap-3 z-10 shrink-0">
-                
+            <!-- FILTERS PANEL -->
+            <div class="px-4 py-2 sm:px-6 sm:py-3 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700 flex flex-col gap-2 z-10 shrink-0">
                 <!-- แถวที่ 1: ค้นหา และ ขนาด -->
-                <div class="flex flex-col xl:flex-row gap-2 sm:gap-3 w-full">
-                    <!-- Search -->
-                    <div class="flex-1 relative">
-                        <div class="absolute top-2.5 sm:top-3 left-0 pl-3 flex items-center pointer-events-none">
-                            <i data-lucide="search" class="h-4 w-4 sm:h-5 sm:w-5 text-gray-400"></i>
+                <div class="flex flex-col md:flex-row gap-2 w-full">
+                    <div class="flex-1 relative min-w-0">
+                        <div class="absolute top-2.5 left-0 pl-2.5 flex items-center pointer-events-none">
+                            <i data-lucide="search" class="h-4 w-4 text-gray-400 dark:text-gray-500"></i>
                         </div>
-                        <textarea id="searchInput" rows="2" placeholder="พิมพ์ค้นหาปกติ หรือวางข้อมูล BOQ หลายบรรทัดที่นี่...&#10;ตัวอย่าง: วางชื่อท่อ และบรรทัดถัดไปใส่ขนาดย่อยเช่น - Dia.20 mm" class="block w-full pl-9 sm:pl-10 pr-3 py-2 sm:py-2.5 border border-gray-300 rounded-lg leading-snug sm:leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm transition-all shadow-sm resize-y"></textarea>
+                        <textarea id="searchInput" rows="1" placeholder="พิมพ์ค้นหาปกติ หรือวางข้อมูล BOQ หลายบรรทัดที่นี่..." class="block w-full pl-8 pr-2.5 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg leading-snug bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm transition-all shadow-sm resize-y min-h-[34px]"></textarea>
                     </div>
 
-                    <!-- Size Range Filter with Unit -->
-                    <div class="flex items-center gap-1.5 w-full xl:w-auto relative">
-                        <div class="hidden sm:flex absolute inset-y-0 left-0 pl-3 items-center pointer-events-none z-10">
-                            <i data-lucide="ruler" class="h-4 w-4 text-gray-400"></i>
+                    <div class="flex items-center gap-1.5 w-full md:w-auto relative shrink-0">
+                        <div class="hidden sm:flex absolute inset-y-0 left-0 pl-2 items-center pointer-events-none z-10">
+                            <i data-lucide="ruler" class="h-3.5 w-3.5 text-gray-400 dark:text-gray-500"></i>
                         </div>
-                        <input type="number" id="minSizeFilter" placeholder="ต่ำสุด" class="block w-1/3 xl:w-24 pl-2 sm:pl-9 pr-1 py-2 sm:py-2.5 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm" step="0.1">
-                        <span class="text-gray-400 font-medium">-</span>
-                        <input type="number" id="maxSizeFilter" placeholder="สูงสุด" class="block w-1/3 xl:w-24 px-2 py-2 sm:py-2.5 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm" step="0.1">
-                        <select id="sizeUnitFilter" class="block w-1/3 xl:w-28 px-1 sm:px-3 py-2 sm:py-2.5 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm appearance-none">
+                        <input type="number" id="minSizeFilter" placeholder="ต่ำสุด" class="block w-1/3 md:w-20 pl-2 sm:pl-7 pr-1 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm" step="0.1">
+                        <span class="text-gray-400 dark:text-gray-500 font-medium text-xs">-</span>
+                        <input type="number" id="maxSizeFilter" placeholder="สูงสุด" class="block w-1/3 md:w-20 px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm" step="0.1">
+                        <select id="sizeUnitFilter" class="block w-1/3 md:w-24 px-1 sm:px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm appearance-none">
                             <option value="any">ระบุหน่วย</option>
                             <option value="inch">นิ้ว</option>
                             <option value="mm">มม.</option>
@@ -116,109 +125,82 @@
                 </div>
 
                 <!-- แถวที่ 2: หมวด, ยี่ห้อ, จังหวัด, เดือน และ Favorite -->
-                <div class="grid grid-cols-2 lg:flex lg:flex-row gap-2 sm:gap-3 w-full items-center">
-                    
-                    <!-- Category -->
-                    <div class="w-full lg:w-44 xl:w-48 relative">
-                        <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
-                            <i data-lucide="filter" class="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-400"></i>
-                        </div>
-                        <select id="categoryFilter" class="block w-full pl-8 pr-6 py-2 sm:py-2.5 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm appearance-none truncate">
+                <div class="grid grid-cols-2 md:flex md:flex-row gap-2 w-full items-center">
+                    <div class="w-full md:flex-1 relative min-w-0">
+                        <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none"><i data-lucide="filter" class="h-3.5 w-3.5 text-gray-400 dark:text-gray-500"></i></div>
+                        <select id="categoryFilter" class="block w-full pl-7 pr-4 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm appearance-none truncate">
                             <option value="">ทุกหมวดสินค้า</option>
                         </select>
                     </div>
 
-                    <!-- Brand -->
-                    <div class="w-full lg:w-44 xl:w-48 relative">
-                        <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
-                            <i data-lucide="tag" class="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-400"></i>
-                        </div>
-                        <select id="brandFilter" class="block w-full pl-8 pr-6 py-2 sm:py-2.5 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm appearance-none truncate">
+                    <div class="w-full md:flex-1 relative min-w-0">
+                        <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none"><i data-lucide="tag" class="h-3.5 w-3.5 text-gray-400 dark:text-gray-500"></i></div>
+                        <select id="brandFilter" class="block w-full pl-7 pr-4 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm appearance-none truncate">
                             <option value="">ทุกยี่ห้อ</option>
                         </select>
                     </div>
 
-                    <!-- Province (Multiselect) -->
-                    <div class="w-full lg:w-48 relative">
-                        <button id="provinceDropdownBtn" class="flex justify-between items-center w-full pl-2.5 pr-2.5 py-2 sm:py-2.5 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm transition-all text-left text-gray-700">
+                    <div class="w-full md:flex-1 relative min-w-0">
+                        <button id="provinceDropdownBtn" class="flex justify-between items-center w-full px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm transition-all text-left">
                             <span id="provinceDropdownText" class="truncate">ทุกพื้นที่</span>
-                            <i data-lucide="chevron-down" class="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-400 shrink-0"></i>
+                            <i data-lucide="chevron-down" class="h-3.5 w-3.5 text-gray-400 dark:text-gray-500 shrink-0"></i>
                         </button>
-                        <!-- Dropdown Menu -->
-                        <div id="provinceDropdownMenu" class="hidden absolute left-0 z-50 mt-1 w-full sm:w-[250px] bg-white shadow-lg max-h-60 rounded-md py-1 ring-1 ring-black ring-opacity-5 overflow-auto border border-gray-100">
-                            <!-- Checkboxes will be injected here via JS -->
-                        </div>
+                        <div id="provinceDropdownMenu" class="hidden absolute left-0 z-50 mt-1 w-full sm:w-[220px] bg-white dark:bg-gray-800 shadow-lg max-h-60 rounded-md py-1 ring-1 ring-black ring-opacity-5 dark:ring-gray-700 overflow-auto"></div>
                     </div>
 
-                    <!-- Month Selector -->
-                    <div class="w-full lg:w-36 relative">
-                        <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
-                            <i data-lucide="calendar" class="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-400"></i>
-                        </div>
-                        <select id="monthFilter" class="block w-full pl-8 pr-6 py-2 sm:py-2.5 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm appearance-none">
+                    <div class="w-full md:flex-1 relative min-w-0">
+                        <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none"><i data-lucide="calendar" class="h-3.5 w-3.5 text-gray-400 dark:text-gray-500"></i></div>
+                        <select id="monthFilter" class="block w-full pl-7 pr-4 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm appearance-none truncate">
                             <option value="latest">ราคาล่าสุด</option>
-                            <option value="ม.ค.">มกราคม</option>
-                            <option value="ก.พ.">กุมภาพันธ์</option>
-                            <option value="มี.ค.">มีนาคม</option>
-                            <option value="เม.ย.">เมษายน</option>
-                            <option value="พ.ค.">พฤษภาคม</option>
-                            <option value="มิ.ย.">มิถุนายน</option>
-                            <option value="ก.ค.">กรกฎาคม</option>
-                            <option value="ส.ค.">สิงหาคม</option>
-                            <option value="ก.ย.">กันยายน</option>
-                            <option value="ต.ค.">ตุลาคม</option>
-                            <option value="พ.ย.">พฤศจิกายน</option>
-                            <option value="ธ.ค.">ธันวาคม</option>
+                            <option value="ม.ค.">มกราคม</option><option value="ก.พ.">กุมภาพันธ์</option><option value="มี.ค.">มีนาคม</option><option value="เม.ย.">เมษายน</option><option value="พ.ค.">พฤษภาคม</option><option value="มิ.ย.">มิถุนายน</option><option value="ก.ค.">กรกฎาคม</option><option value="ส.ค.">สิงหาคม</option><option value="ก.ย.">กันยายน</option><option value="ต.ค.">ตุลาคม</option><option value="พ.ย.">พฤศจิกายน</option><option value="ธ.ค.">ธันวาคม</option>
                         </select>
                     </div>
 
-                    <!-- Favorite Toggle -->
-                    <label class="col-span-2 lg:col-span-1 flex items-center justify-center cursor-pointer lg:ml-auto w-full lg:w-auto bg-white px-3 py-2 sm:py-2.5 rounded-lg border border-gray-300 shadow-sm hover:bg-yellow-50 transition-colors">
+                    <label class="col-span-2 md:col-span-1 flex items-center justify-center cursor-pointer md:ml-auto w-full md:w-auto shrink-0 bg-white dark:bg-gray-800 px-2.5 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm hover:bg-yellow-50 dark:hover:bg-gray-700 transition-colors">
                         <input type="checkbox" id="favFilterToggle" class="hidden">
-                        <i data-lucide="star" id="favFilterIcon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-300 mr-1.5 sm:mr-2"></i>
-                        <span class="text-xs sm:text-sm font-medium text-gray-700">เฉพาะรายการโปรด</span>
+                        <i data-lucide="star" id="favFilterIcon" class="w-3.5 h-3.5 text-gray-300 dark:text-gray-500 mr-1.5"></i>
+                        <span class="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">เฉพาะรายการโปรด</span>
                     </label>
-
                 </div>
             </div>
 
-            <!-- Table Area -->
-            <div class="flex-1 overflow-x-auto overflow-y-auto bg-white relative">
-                <table class="min-w-full divide-y divide-gray-200 table-fixed">
-                    <thead class="bg-gray-100 sticky top-0 z-0 shadow-sm">
+            <!-- TABLE AREA -->
+            <div class="flex-1 overflow-x-auto overflow-y-auto bg-white dark:bg-gray-900 relative">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-fixed">
+                    <thead class="bg-gray-100 dark:bg-gray-800 sticky top-0 z-0 shadow-sm dark:shadow-gray-900">
                         <tr>
-                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 w-10 sm:w-12 text-center text-gray-400">
+                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 w-10 sm:w-12 text-center text-gray-400 dark:text-gray-500">
                                 <i data-lucide="star" class="w-3.5 h-3.5 sm:w-4 sm:h-4 mx-auto"></i>
                             </th>
-                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-semibold text-gray-600 uppercase tracking-wider w-24">พื้นที่</th>
-                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-semibold text-gray-600 uppercase tracking-wider w-36 sm:w-40">หมวดสินค้า</th>
-                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-semibold text-gray-600 uppercase tracking-wider min-w-[200px] w-auto">รายการ</th>
-                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-semibold text-gray-600 uppercase tracking-wider w-28 sm:w-32">ยี่ห้อ</th>
-                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs font-semibold text-gray-600 uppercase tracking-wider w-16 sm:w-20">หน่วย</th>
-                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 text-right text-[10px] sm:text-xs font-semibold text-gray-600 uppercase tracking-wider w-32 sm:w-40 cursor-pointer hover:bg-gray-200 transition-colors select-none" id="sortPriceBtn" title="คลิกเพื่อเรียงลำดับราคา">
+                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider w-24">พื้นที่</th>
+                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider w-36 sm:w-40">หมวดสินค้า</th>
+                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider min-w-[200px] w-auto">รายการ</th>
+                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider w-28 sm:w-32">ยี่ห้อ</th>
+                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider w-16 sm:w-20">หน่วย</th>
+                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 text-right text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider w-32 sm:w-40 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors select-none" id="sortPriceBtn" title="คลิกเพื่อเรียงลำดับราคา">
                                 <div class="flex items-center justify-end gap-1">
-                                    ราคา <span id="priceHeaderMonth" class="text-[9px] sm:text-[10px] text-gray-400 font-normal"></span>
-                                    <span id="sortIconContainer" class="inline-flex"><i data-lucide="arrow-up-down" class="w-3 h-3 text-gray-400"></i></span>
+                                    ราคา <span id="priceHeaderMonth" class="text-[9px] sm:text-[10px] text-gray-400 dark:text-gray-500 font-normal"></span>
+                                    <span id="sortIconContainer" class="inline-flex"><i data-lucide="arrow-up-down" class="w-3 h-3 text-gray-400 dark:text-gray-500"></i></span>
                                 </div>
                             </th>
                         </tr>
                     </thead>
-                    <tbody id="tableBody" class="bg-white divide-y divide-gray-100">
-                        <!-- Table rows will be inserted here via JS -->
+                    <tbody id="tableBody" class="bg-white dark:bg-gray-900 divide-y divide-gray-100 dark:divide-gray-800">
+                        <!-- Rows injected via JS -->
                     </tbody>
                 </table>
             </div>
             
-            <!-- Footer & Pagination -->
-            <div class="px-4 py-2.5 sm:px-6 sm:py-3 bg-white border-t border-gray-200 flex flex-col shrink-0 gap-2 sm:gap-3">
+            <!-- FOOTER & PAGINATION -->
+            <div class="px-4 py-2.5 sm:px-6 sm:py-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex flex-col shrink-0 gap-2 sm:gap-3 transition-colors">
                 <div class="w-full flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3">
-                    <div class="flex flex-wrap justify-center sm:justify-start items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 w-full sm:w-auto">
+                    <div class="flex flex-wrap justify-center sm:justify-start items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 dark:text-gray-400 w-full sm:w-auto">
                         <div>
-                            แสดง <span class="font-medium text-gray-800" id="pageStartText">0</span>-<span class="font-medium text-gray-800" id="pageEndText">0</span> จาก <span class="font-medium text-blue-600" id="recordCount">0</span>
+                            แสดง <span class="font-medium text-gray-800 dark:text-gray-200" id="pageStartText">0</span>-<span class="font-medium text-gray-800 dark:text-gray-200" id="pageEndText">0</span> จาก <span class="font-medium text-blue-600 dark:text-blue-400" id="recordCount">0</span>
                         </div>
-                        <div class="flex items-center gap-1 border-l border-gray-300 pl-2 sm:pl-3">
+                        <div class="flex items-center gap-1 border-l border-gray-300 dark:border-gray-600 pl-2 sm:pl-3">
                             <span class="hidden sm:inline">แสดงหน้าละ:</span>
-                            <select id="itemsPerPageSelect" class="border border-gray-300 rounded-md bg-white text-gray-700 text-xs sm:text-sm py-0.5 sm:py-1 px-1 sm:px-2 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <select id="itemsPerPageSelect" class="border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs sm:text-sm py-0.5 sm:py-1 px-1 sm:px-2 focus:outline-none focus:ring-1 focus:ring-blue-500">
                                 <option value="50">50</option>
                                 <option value="100">100</option>
                                 <option value="200">200</option>
@@ -226,100 +208,80 @@
                         </div>
                     </div>
                     
-                    <!-- Pagination Controls -->
                     <div class="flex items-center gap-1 w-full sm:w-auto justify-center sm:justify-end">
-                        <button id="firstPageBtn" class="p-1 sm:p-1.5 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
-                            <i data-lucide="chevrons-left" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
-                        </button>
-                        <button id="prevPageBtn" class="p-1 sm:p-1.5 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
-                            <i data-lucide="chevron-left" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
-                        </button>
-                        <div class="flex items-center gap-1 sm:gap-2 px-1 sm:px-2 py-1 text-xs sm:text-sm text-gray-600">
-                            หน้า 
-                            <input type="number" id="pageInput" min="1" value="1" class="w-10 sm:w-12 text-center border border-gray-300 rounded-md py-0.5 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                            / <span id="totalPagesText" class="font-medium text-gray-800">1</span>
+                        <button id="firstPageBtn" class="p-1 sm:p-1.5 border border-gray-300 dark:border-gray-600 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"><i data-lucide="chevrons-left" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i></button>
+                        <button id="prevPageBtn" class="p-1 sm:p-1.5 border border-gray-300 dark:border-gray-600 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"><i data-lucide="chevron-left" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i></button>
+                        <div class="flex items-center gap-1 sm:gap-2 px-1 sm:px-2 py-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                            หน้า <input type="number" id="pageInput" min="1" value="1" class="w-10 sm:w-12 text-center border border-gray-300 dark:border-gray-600 rounded-md py-0.5 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            / <span id="totalPagesText" class="font-medium text-gray-800 dark:text-gray-200">1</span>
                         </div>
-                        <button id="nextPageBtn" class="p-1 sm:p-1.5 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
-                            <i data-lucide="chevron-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
-                        </button>
-                        <button id="lastPageBtn" class="p-1 sm:p-1.5 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
-                            <i data-lucide="chevrons-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
-                        </button>
+                        <button id="nextPageBtn" class="p-1 sm:p-1.5 border border-gray-300 dark:border-gray-600 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"><i data-lucide="chevron-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i></button>
+                        <button id="lastPageBtn" class="p-1 sm:p-1.5 border border-gray-300 dark:border-gray-600 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"><i data-lucide="chevrons-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i></button>
                     </div>
                 </div>
-
-                <!-- หมายเหตุ -->
-                <div class="w-full text-center sm:text-right text-[10px] sm:text-xs text-gray-400 border-t border-gray-100 pt-1.5 sm:pt-2">
+                <div class="w-full text-center sm:text-right text-[10px] sm:text-xs text-gray-400 dark:text-gray-500 border-t border-gray-100 dark:border-gray-700 pt-1.5 sm:pt-2">
                     * ราคานี้เป็นราคาเงินสด ไม่รวมภาษีมูลค่าเพิ่ม ไม่รวมค่าขนส่ง
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Changelog Modal -->
+    <!-- ========================================== -->
+    <!-- CHANGELOG MODAL -->
+    <!-- ========================================== -->
     <div id="changelogModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
-            <!-- Modal Header -->
-            <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                <div class="flex items-center gap-2 text-gray-800">
-                    <i data-lucide="file-clock" class="w-4 h-4 sm:w-5 sm:h-5 text-blue-600"></i>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-900/50">
+                <div class="flex items-center gap-2 text-gray-800 dark:text-gray-200">
+                    <i data-lucide="file-clock" class="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 dark:text-blue-400"></i>
                     <h2 class="text-base sm:text-lg font-bold">ประวัติการอัปเดต</h2>
                 </div>
                 <div class="flex items-center gap-3">
-                    <button id="adminEditBtn" class="text-[10px] sm:text-xs text-blue-600 hover:text-blue-800 font-medium px-2 py-1 rounded border border-blue-200 bg-white hover:bg-blue-50 transition-colors shadow-sm">
+                    <button id="adminEditBtn" class="text-[10px] sm:text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded border border-blue-200 dark:border-blue-800 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors shadow-sm">
                         <i data-lucide="settings-2" class="w-3 h-3 inline-block mr-1 mb-0.5"></i>Admin
                     </button>
-                    <button id="closeChangelogBtn" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <button id="closeChangelogBtn" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
             </div>
             
-            <!-- View Mode -->
-            <div id="changelogViewMode" class="p-4 sm:p-6 overflow-y-auto flex-1 flex flex-col gap-4 sm:gap-5 bg-white">
-                <!-- Changelog items will be injected here via JS -->
-            </div>
+            <div id="changelogViewMode" class="p-4 sm:p-6 overflow-y-auto flex-1 flex flex-col gap-4 sm:gap-5 bg-white dark:bg-gray-800"></div>
 
-            <!-- Edit Mode (Admin) -->
-            <div id="changelogEditMode" class="hidden p-4 sm:p-6 overflow-y-auto flex-1 flex flex-col gap-3 sm:gap-4 bg-blue-50/50">
+            <div id="changelogEditMode" class="hidden p-4 sm:p-6 overflow-y-auto flex-1 flex flex-col gap-3 sm:gap-4 bg-blue-50/50 dark:bg-blue-900/10">
                 <div class="flex justify-between items-center">
-                    <h3 class="font-bold text-sm text-blue-800 flex items-center gap-2"><i data-lucide="list-collapse" class="w-4 h-4"></i> จัดการประวัติทั้งหมด</h3>
+                    <h3 class="font-bold text-sm text-blue-800 dark:text-blue-400 flex items-center gap-2"><i data-lucide="list-collapse" class="w-4 h-4"></i> จัดการประวัติทั้งหมด</h3>
                 </div>
-                <!-- รายการที่มีอยู่ -->
-                <div id="adminChangelogList" class="flex flex-col gap-2 max-h-40 overflow-y-auto border border-blue-200 p-2 rounded-lg bg-white shadow-inner">
-                    <!-- รายชื่อฉบับย่อให้กด Edit/Delete จะถูกแทรกที่นี่ -->
-                </div>
+                <div id="adminChangelogList" class="flex flex-col gap-2 max-h-40 overflow-y-auto border border-blue-200 dark:border-blue-800 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-inner"></div>
 
-                <div class="flex items-center justify-between mt-2 border-b border-blue-200 pb-2">
-                    <h3 id="formTitle" class="font-bold text-sm text-blue-800 flex items-center gap-2"><i data-lucide="pen-line" class="w-4 h-4"></i> เพิ่มประวัติใหม่</h3>
-                    <button id="resetFormBtn" class="hidden text-xs text-gray-500 hover:text-gray-800 underline font-medium">ยกเลิกแก้ไข</button>
+                <div class="flex items-center justify-between mt-2 border-b border-blue-200 dark:border-blue-800 pb-2">
+                    <h3 id="formTitle" class="font-bold text-sm text-blue-800 dark:text-blue-400 flex items-center gap-2"><i data-lucide="pen-line" class="w-4 h-4"></i> เพิ่มประวัติใหม่</h3>
+                    <button id="resetFormBtn" class="hidden text-xs text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 underline font-medium">ยกเลิกแก้ไข</button>
                 </div>
-                
                 <input type="hidden" id="editIndexInput" value="-1">
-                
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Version</label>
-                    <input type="text" id="newVersionInput" placeholder="เช่น V.1" class="w-full p-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm">
+                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">Version</label>
+                    <input type="text" id="newVersionInput" class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">วันที่อัปเดต</label>
-                    <input type="text" id="newDateInput" placeholder="เช่น 31/05/69" class="w-full p-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm">
+                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">วันที่อัปเดต</label>
+                    <input type="text" id="newDateInput" class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">รายละเอียด (ขึ้นบรรทัดใหม่สำหรับแต่ละข้อ)</label>
-                    <textarea id="newChangesInput" placeholder="- เพิ่มฟีเจอร์ใหม่...&#10;- แก้ไขบั๊ก..." class="w-full p-2.5 border border-gray-300 rounded-lg text-sm h-24 resize-y focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm"></textarea>
+                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">รายละเอียด (ขึ้นบรรทัดใหม่สำหรับแต่ละข้อ)</label>
+                    <textarea id="newChangesInput" class="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm h-24 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none resize-y"></textarea>
                 </div>
-                <div class="flex justify-end gap-2 mt-2 pt-4 border-t border-blue-200">
-                    <button id="cancelEditBtn" class="px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-gray-600 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg transition-colors shadow-sm">ปิด Admin</button>
-                    <button id="saveChangelogBtn" class="px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-sm">บันทึกข้อมูล</button>
+                <div class="flex justify-end gap-2 mt-2 pt-4 border-t border-blue-200 dark:border-blue-800">
+                    <button id="cancelEditBtn" class="px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg">ปิด Admin</button>
+                    <button id="saveChangelogBtn" class="px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg">บันทึกข้อมูล</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ======================================================= -->
-    <!-- ฐานข้อมูลเริ่มต้น (Default Database)                       -->
-    <!-- ======================================================= -->
+    <!-- ========================================== -->
+    <!-- DEFAULT CSV DATABASES -->
+    <!-- ========================================== -->
 
     <!-- 1. ขอนแก่น -->
     <script id="csv-khonkaen" type="text/csv">
@@ -5956,57 +5918,110 @@
 
     </script>
 
-    <!-- Application Script -->
+    <!-- ========================================== -->
+    <!-- APPLICATION SCRIPT -->
+    <!-- ========================================== -->
     <script>
-        lucide.createIcons();
-
-        // --- 1. State Management ---
+        // --- 1. CONFIG & STATE ---
+        const ITEMS_PER_PAGE_DEFAULT = 50;
         let appData = [];
         let filteredData = [];
         let selectedProvinces = []; 
         let currentSortOrder = 'default'; 
-        
-        // Pagination
         let currentPage = 1;
-        let itemsPerPage = 50;
+        let itemsPerPage = ITEMS_PER_PAGE_DEFAULT;
+        let isDarkMode = localStorage.getItem('theme') === 'dark';
 
-        // Favorites (ใช้ LocalStorage เก็บ ID ของรายการที่บันทึกไว้)
         let favoriteIds = new Set(JSON.parse(localStorage.getItem('pricelist_favorites') || '[]'));
-
-        window.toggleFavorite = (id) => {
-            if (favoriteIds.has(id)) {
-                favoriteIds.delete(id);
-            } else {
-                favoriteIds.add(id);
-            }
-            localStorage.setItem('pricelist_favorites', JSON.stringify([...favoriteIds]));
-            renderTable(); // รีเฟรชเฉพาะตาราง
-        };
-
-        // Changelog State
+        
         const defaultChangelog = [
-            { version: "V.1.1", date: "30/05/69", changes: ["เพิ่มระบบให้ Admin แก้ไขประวัติย้อนหลังได้", "ปรับปรุงระบบ Export ให้ฉลาดและทำงานเสถียรขึ้น", "เพิ่มหมายเหตุราคาที่ส่วนท้ายของตาราง", "ปรับให้รองรับการใช้งานบนมือถือ (Mobile Responsive)", "เพิ่มฟีเจอร์ปรับขนาดความกว้างของคอลัมน์ตารางได้ (สัมผัสและลาก)"] },
-            { version: "V.1.0", date: "30/05/69", changes: ["เพิ่มระบบค้นหาแบบกลุ่ม/คัดลอก BOQ (รองรับการคัดลอกหลายบรรทัดพร้อมย่อยขนาด)", "เปิดตัวระบบ Pricelist วัสดุก่อสร้าง (Pro)"] }
+            { version: "V.1.2", date: "31/05/69", changes: ["เพิ่มระบบเปลี่ยน ธีมมืด/สว่าง (Dark/Light Mode)", "จัดระเบียบโครงสร้างโค้ดใหม่ (Refactoring)"] },
+            { version: "V.1.1", date: "30/05/69", changes: ["เพิ่มระบบให้ Admin แก้ไขประวัติย้อนหลังได้", "ปรับให้รองรับมือถือ (Mobile Responsive)", "เพิ่มฟีเจอร์ปรับขนาดคอลัมน์ตาราง"] },
+            { version: "V.1.0", date: "30/05/69", changes: ["เปิดตัวระบบ Pricelist วัสดุก่อสร้าง (Pro)"] }
         ];
         let changelogData = JSON.parse(localStorage.getItem('pricelist_changelog')) || defaultChangelog;
 
-        // --- 2. Data Parsing & Utilities ---
+        // --- 2. DOM ELEMENTS MAPPING ---
+        const els = {
+            html: document.documentElement,
+            themeBtns: document.querySelectorAll('.themeToggleBtn'),
+            themeIcons: document.querySelectorAll('.themeIcon'),
+            
+            // Core
+            fileInput: document.getElementById('fileInput'),
+            loadingIndicator: document.getElementById('loadingIndicator'),
+            clearDataBtn: document.getElementById('clearDataBtn'),
+            exportBtn: document.getElementById('exportBtn'),
+            tableBody: document.getElementById('tableBody'),
+            totalRecordCount: document.getElementById('totalRecordCount'),
+            recordCount: document.getElementById('recordCount'),
+            
+            // Filters
+            searchInput: document.getElementById('searchInput'),
+            minSizeFilter: document.getElementById('minSizeFilter'),
+            maxSizeFilter: document.getElementById('maxSizeFilter'),
+            sizeUnitFilter: document.getElementById('sizeUnitFilter'),
+            categoryFilter: document.getElementById('categoryFilter'),
+            brandFilter: document.getElementById('brandFilter'),
+            monthFilter: document.getElementById('monthFilter'),
+            favFilterToggle: document.getElementById('favFilterToggle'),
+            favFilterIcon: document.getElementById('favFilterIcon'),
+            provinceBtn: document.getElementById('provinceDropdownBtn'),
+            provinceText: document.getElementById('provinceDropdownText'),
+            provinceMenu: document.getElementById('provinceDropdownMenu'),
+            sortPriceBtn: document.getElementById('sortPriceBtn'),
+            sortIconContainer: document.getElementById('sortIconContainer'),
+            priceHeaderMonth: document.getElementById('priceHeaderMonth'),
+            
+            // Pagination
+            prevPageBtn: document.getElementById('prevPageBtn'),
+            nextPageBtn: document.getElementById('nextPageBtn'),
+            firstPageBtn: document.getElementById('firstPageBtn'),
+            lastPageBtn: document.getElementById('lastPageBtn'),
+            pageInput: document.getElementById('pageInput'),
+            itemsPerPageSelect: document.getElementById('itemsPerPageSelect'),
+            pageStartText: document.getElementById('pageStartText'),
+            pageEndText: document.getElementById('pageEndText'),
+            totalPagesText: document.getElementById('totalPagesText'),
+            
+            // Changelog
+            changelogBtns: [document.getElementById('changelogBtn'), document.getElementById('changelogBtnDesktop')].filter(Boolean),
+            changelogModal: document.getElementById('changelogModal'),
+            closeChangelogBtn: document.getElementById('closeChangelogBtn'),
+            changelogViewMode: document.getElementById('changelogViewMode'),
+            changelogEditMode: document.getElementById('changelogEditMode'),
+            adminEditBtn: document.getElementById('adminEditBtn'),
+            cancelEditBtn: document.getElementById('cancelEditBtn'),
+            saveChangelogBtn: document.getElementById('saveChangelogBtn'),
+            headerVersionText: document.getElementById('headerVersionText'),
+            headerVersionTextMobile: document.getElementById('headerVersionTextMobile'),
+            adminChangelogList: document.getElementById('adminChangelogList'),
+            resetFormBtn: document.getElementById('resetFormBtn'),
+            editIndexInput: document.getElementById('editIndexInput'),
+            newVersionInput: document.getElementById('newVersionInput'),
+            newDateInput: document.getElementById('newDateInput'),
+            newChangesInput: document.getElementById('newChangesInput'),
+            formTitle: document.getElementById('formTitle')
+        };
+
+        // --- 3. UTILITIES & PARSERS ---
+        const MONTHS_MAP = [
+            { full: 'มกราคม', short: 'ม.ค.', index: 0 }, { full: 'กุมภาพันธ์', short: 'ก.พ.', index: 1 },
+            { full: 'มีนาคม', short: 'มี.ค.', index: 2 }, { full: 'เมษายน', short: 'เม.ย.', index: 3 },
+            { full: 'พฤษภาคม', short: 'พ.ค.', index: 4 }, { full: 'มิถุนายน', short: 'มิ.ย.', index: 5 },
+            { full: 'กรกฎาคม', short: 'ก.ค.', index: 6 }, { full: 'สิงหาคม', short: 'ส.ค.', index: 7 },
+            { full: 'กันยายน', short: 'ก.ย.', index: 8 }, { full: 'ตุลาคม', short: 'ต.ค.', index: 9 },
+            { full: 'พฤศจิกายน', short: 'พ.ย.', index: 10 }, { full: 'ธันวาคม', short: 'ธ.ค.', index: 11 }
+        ];
+
         const parseCSV = (text) => {
             const rows = [];
-            let currentRow = [];
-            let currentCell = '';
-            let insideQuotes = false;
-
+            let currentRow = [], currentCell = '', insideQuotes = false;
             for (let i = 0; i < text.length; i++) {
-                const char = text[i];
-                const nextChar = text[i + 1];
-
+                const char = text[i], nextChar = text[i + 1];
                 if (char === '"') {
-                    if (insideQuotes && nextChar === '"') {
-                        currentCell += '"'; i++;
-                    } else {
-                        insideQuotes = !insideQuotes;
-                    }
+                    if (insideQuotes && nextChar === '"') { currentCell += '"'; i++; } 
+                    else { insideQuotes = !insideQuotes; }
                 } else if (char === ',' && !insideQuotes) {
                     currentRow.push(currentCell.trim()); currentCell = '';
                 } else if ((char === '\n' || char === '\r') && !insideQuotes) {
@@ -6014,127 +6029,61 @@
                     currentRow.push(currentCell.trim());
                     if (currentRow.some(cell => cell !== '')) rows.push(currentRow);
                     currentRow = []; currentCell = '';
-                } else {
-                    currentCell += char;
-                }
+                } else { currentCell += char; }
             }
-            if (currentCell || currentRow.length > 0) {
-                currentRow.push(currentCell.trim()); rows.push(currentRow);
-            }
+            if (currentCell || currentRow.length > 0) { currentRow.push(currentCell.trim()); rows.push(currentRow); }
             return rows;
         };
 
-        const MONTHS_MAP = [
-            { full: 'มกราคม', short: 'ม.ค.', index: 0 },
-            { full: 'กุมภาพันธ์', short: 'ก.พ.', index: 1 },
-            { full: 'มีนาคม', short: 'มี.ค.', index: 2 },
-            { full: 'เมษายน', short: 'เม.ย.', index: 3 },
-            { full: 'พฤษภาคม', short: 'พ.ค.', index: 4 },
-            { full: 'มิถุนายน', short: 'มิ.ย.', index: 5 },
-            { full: 'กรกฎาคม', short: 'ก.ค.', index: 6 },
-            { full: 'สิงหาคม', short: 'ส.ค.', index: 7 },
-            { full: 'กันยายน', short: 'ก.ย.', index: 8 },
-            { full: 'ตุลาคม', short: 'ต.ค.', index: 9 },
-            { full: 'พฤศจิกายน', short: 'พ.ย.', index: 10 },
-            { full: 'ธันวาคม', short: 'ธ.ค.', index: 11 }
-        ];
-
-        // ฟังก์ชันหาราคาตามเดือนที่เลือก, หาราคาของเดือนก่อนหน้า, และดึงประวัติราคา 4 เดือน
         const getPriceInfo = (pricesObj, targetMonth) => {
             let history = [];
-            const monthsReversed = [...MONTHS_MAP].reverse(); // ธ.ค. -> ม.ค.
-
-            let startIndex = 0;
-            if (targetMonth !== 'latest') {
-                startIndex = monthsReversed.findIndex(m => m.short === targetMonth);
-                if (startIndex === -1) startIndex = 0;
-            }
-
+            const monthsReversed = [...MONTHS_MAP].reverse();
+            let startIndex = targetMonth !== 'latest' ? Math.max(0, monthsReversed.findIndex(m => m.short === targetMonth)) : 0;
+            
             for (let i = startIndex; i < monthsReversed.length; i++) {
                 const m = monthsReversed[i].short;
-                if (pricesObj[m]) {
-                    history.push({ month: m, price: pricesObj[m] });
-                }
+                if (pricesObj[m]) history.push({ month: m, price: pricesObj[m] });
             }
-
-            // กรณีไม่มีชื่อเดือนเลย แต่มีคอลัมน์ราคาเดี่ยวๆ
-            if (history.length === 0 && pricesObj['ล่าสุด']) {
-                history.push({ month: 'ล่าสุด', price: pricesObj['ล่าสุด'] });
-            }
-
-            // ดึงมาแค่ 4 เดือนที่มีข้อมูลล่าสุดตามที่ผู้ใช้เลือก
-            const top4History = history.slice(0, 4);
-
+            if (history.length === 0 && pricesObj['ล่าสุด']) history.push({ month: 'ล่าสุด', price: pricesObj['ล่าสุด'] });
+            
+            const top4 = history.slice(0, 4);
             return { 
-                currentPrice: top4History.length > 0 ? top4History[0].price : 'ไม่มีข้อมูล', 
-                currentMonth: top4History.length > 0 && top4History[0].month !== 'ล่าสุด' ? top4History[0].month : '', 
-                prevPrice: top4History.length > 1 ? top4History[1].price : 'ไม่มีข้อมูล', 
-                prevMonth: top4History.length > 1 ? top4History[1].month : '',
-                history: top4History
+                currentPrice: top4.length > 0 ? top4[0].price : 'ไม่มีข้อมูล', 
+                currentMonth: top4.length > 0 && top4[0].month !== 'ล่าสุด' ? top4[0].month : '', 
+                prevPrice: top4.length > 1 ? top4[1].price : 'ไม่มีข้อมูล', 
+                prevMonth: top4.length > 1 ? top4[1].month : '',
+                history: top4
             };
         };
 
-        const extractBrand = (name) => {
-            const match = name.match(/ตรา\s*(.+)/);
-            return (match && match[1]) ? match[1].trim() : "-";
-        };
-
         const parseSizeToFloat = (sizeStr) => {
-            let val = null;
             const mixedMatch = sizeStr.match(/^(\d+)\s+(\d+)\/(\d+)$/);
-            if (mixedMatch) {
-                val = parseInt(mixedMatch[1]) + (parseInt(mixedMatch[2]) / parseInt(mixedMatch[3]));
-            } else {
-                const fracMatch = sizeStr.match(/^(\d+)\/(\d+)$/);
-                if (fracMatch) {
-                    val = parseInt(fracMatch[1]) / parseInt(fracMatch[2]);
-                } else {
-                    val = parseFloat(sizeStr);
-                }
-            }
-            return val;
+            if (mixedMatch) return parseInt(mixedMatch[1]) + (parseInt(mixedMatch[2]) / parseInt(mixedMatch[3]));
+            const fracMatch = sizeStr.match(/^(\d+)\/(\d+)$/);
+            if (fracMatch) return parseInt(fracMatch[1]) / parseInt(fracMatch[2]);
+            return parseFloat(sizeStr);
         };
 
         const extractSizeValues = (name) => {
             const sizes = [];
             if (name.includes('สายไฟ') || name.includes('สายส่ง') || name.includes('ตร.มม.')) {
                 const sqmmMatch = name.match(/(\d+(?:\.\d+)?)\s*ตร\.มม\./);
-                if (sqmmMatch && sqmmMatch[1]) {
-                    sizes.push({ value: parseFloat(sqmmMatch[1]), unit: 'sqmm' });
-                    return sizes;
-                }
+                if (sqmmMatch && sqmmMatch[1]) { sizes.push({ value: parseFloat(sqmmMatch[1]), unit: 'sqmm' }); return sizes; }
             }
-
             let sizePartMatch = name.match(/(?:ขนาด|ศก\.)\s*(.*?)(?:ยาว|$)/); 
             if (!sizePartMatch) {
-                // Fallback ให้รองรับการดึงเศษส่วน (1/2, 1 1/2) ด้วย ป้องกันการดึงแค่เลข 2 ออกมาจาก 1/2
-                const fallbackMatch = name.match(/(\d+[ \t]+\d+\/\d+|\d+\/\d+|\d+(?:\.\d+)?)\s*(?:นิ้ว|")/);
-                if (fallbackMatch && fallbackMatch[1]) {
-                    let val = parseSizeToFloat(fallbackMatch[1].trim());
-                    if (val !== null && !isNaN(val)) {
-                        sizes.push({ value: val, unit: 'inch' });
-                        return sizes;
-                    }
+                const fMatch = name.match(/(\d+[ \t]+\d+\/\d+|\d+\/\d+|\d+(?:\.\d+)?)\s*(?:นิ้ว|")/);
+                if (fMatch && fMatch[1]) {
+                    let val = parseSizeToFloat(fMatch[1].trim());
+                    if (val !== null && !isNaN(val)) return [{ value: val, unit: 'inch' }];
                 }
-
-                // Fallback สำหรับ มม.
-                const fallbackMmMatch = name.match(/(\d+(?:\.\d+)?)\s*(?:มม\.|mm)/i);
-                if (fallbackMmMatch && fallbackMmMatch[1]) {
-                    sizes.push({ value: parseFloat(fallbackMmMatch[1]), unit: 'mm' });
-                    return sizes;
-                }
+                const fMmMatch = name.match(/(\d+(?:\.\d+)?)\s*(?:มม\.|mm)/i);
+                if (fMmMatch && fMmMatch[1]) return [{ value: parseFloat(fMmMatch[1]), unit: 'mm' }];
             }
-
             if (sizePartMatch && sizePartMatch[1]) {
                 let chunk = sizePartMatch[1].trim();
                 let unit = 'unknown';
-                if (chunk.includes('นิ้ว') || chunk.includes('"')) unit = 'inch';
-                else if (chunk.includes('ตร.มม.')) unit = 'sqmm';
-                else if (chunk.includes('มม.') || chunk.includes('mm')) unit = 'mm';
-                else if (name.includes('นิ้ว') || name.includes('"')) unit = 'inch';
-                else if (name.includes('มม.')) unit = 'mm';
-
-                // สลับลำดับ Regex เอาเศษส่วนขึ้นก่อนตัวเลขเดี่ยว ป้องกันการจับแยก 1/2 เป็น 1 และ 2
+                if (chunk.match(/นิ้ว|"/)) unit = 'inch'; else if (chunk.includes('ตร.มม.')) unit = 'sqmm'; else if (chunk.match(/มม\.|mm/)) unit = 'mm';
                 const regex = /(?:^|[^\d])(\d+[ \t]+\d+\/\d+|\d+\/\d+|\d+(?:\.\d+)?)(?=[^\d]|$)/g;
                 let m;
                 while ((m = regex.exec(chunk)) !== null) {
@@ -6145,13 +6094,54 @@
             return sizes.length > 0 ? sizes : null;
         };
 
-        // --- 3. CSV Processor ---
+        const getSearchKeywordGroups = () => {
+            const term = els.searchInput.value.trim().toLowerCase();
+            const lines = term.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            let queries = [], currentHeader = '';
+            lines.forEach((line, i) => {
+                if (line.match(/^[-•*]/)) {
+                    queries.push(`${currentHeader} ${line.replace(/^[-•*]\s*/, '')}`);
+                } else {
+                    if (i + 1 < lines.length && lines[i+1].match(/^[-•*]/)) currentHeader = line;
+                    else { currentHeader = line; queries.push(line); }
+                }
+            });
+            return queries.map(text => {
+                const extractedSizes = [];
+                const regex = /(?:dia\.?)?\s*(\d+(?:\.\d+)?|\d+\/\d+|\d+\s+\d+\/\d+)\s*(mm|มม\.?|นิ้ว|"|ตร\.มม\.|sqmm)/gi;
+                let cleanedText = text, m;
+                while ((m = regex.exec(text)) !== null) {
+                    let val = parseSizeToFloat(m[1].trim()), unitStr = m[2].toLowerCase(), unit = 'unknown';
+                    if (unitStr.match(/นิ้ว|"/)) unit = 'inch'; else if (unitStr.match(/ตร\.มม\.|sqmm/)) unit = 'sqmm'; else if (unitStr.match(/มม|mm/)) unit = 'mm';
+                    if (val !== null && !isNaN(val)) extractedSizes.push({ value: val, unit });
+                    cleanedText = cleanedText.replace(m[0], ' ');
+                }
+                cleanedText = cleanedText.replace(/\b(id|od)\b/gi, ' ');
+                return {
+                    keywords: cleanedText.replace(/[()\[\]{},"']/g, ' ').split(/\s+/).filter(k => k.length > 0),
+                    extractedSizes
+                };
+            });
+        };
+
+        // UI Helpers
+        const colorPalette = ['bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300', 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300', 'bg-violet-100 text-violet-800 dark:bg-violet-900/40 dark:text-violet-300', 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300', 'bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300'];
+        const styleCache = { category: {}, brand: {}, catIdx: 0, brandIdx: 0 };
+        const getColorClass = (val, type) => {
+            if (!val || val === '-') return 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300';
+            const cache = styleCache[type];
+            if (!cache[val]) {
+                cache[val] = colorPalette[styleCache[`${type}Idx`] % colorPalette.length];
+                styleCache[`${type}Idx`]++;
+            }
+            return cache[val];
+        };
+
+        // --- 4. DATA PROCESSING ---
         const processCSVData = (text, defaultSourceName) => {
             const parsedRows = parseCSV(text);
             if (parsedRows.length === 0) return [];
-
-            let headerRowIndex = -1;
-            let catIdx = -1, nameIdx = -1, unitIdx = -1, brandIdx = -1, codeIdx = -1;
+            let headerRowIndex = -1, catIdx = -1, nameIdx = -1, unitIdx = -1, brandIdx = -1, codeIdx = -1;
 
             for (let i = 0; i < Math.min(10, parsedRows.length); i++) {
                 const row = parsedRows[i];
@@ -6161,84 +6151,65 @@
                     headerRowIndex = i;
                     catIdx = row.findIndex(c => c && c.includes('หมวดสินค้า'));
                     brandIdx = row.findIndex(c => c && c.includes('ยี่ห้อ'));
-                    codeIdx = row.findIndex(c => c && c === 'รหัส');
+                    codeIdx = row.findIndex(c => c === 'รหัส');
                     break;
                 }
             }
-
             if (headerRowIndex === -1) return [];
 
-            const headerRow = parsedRows[headerRowIndex];
-            const monthCols = {};
+            const headerRow = parsedRows[headerRowIndex], monthCols = {};
             let defaultPriceCol = -1;
 
-            for (let i = 0; i < headerRow.length; i++) {
-                const h = headerRow[i] || '';
+            headerRow.forEach((h, i) => {
+                const ht = h || '';
                 let matched = false;
                 for (const m of MONTHS_MAP) {
-                    if (h.includes(m.full) || h.includes(m.short) || h.includes(m.short.replace('.',''))) {
-                        monthCols[m.short] = i;
-                        matched = true; break;
+                    if (ht.includes(m.full) || ht.includes(m.short) || ht.includes(m.short.replace('.',''))) {
+                        monthCols[m.short] = i; matched = true; break;
                     }
                 }
-                if (!matched && (h.includes('ราคา') || h.toLowerCase().includes('price') || h.match(/ม.ค.|ก.พ.|มี.ค.|เม.ย.|พ.ค.|มิ.ย.|ก.ค.|ส.ค.|ก.ย.|ต.ค.|พ.ย.|ธ.ค./))) {
-                    // รองรับหัวตารางแปลกๆ เช่น พ.ค.-69
-                    for(const m of MONTHS_MAP) {
-                        if(h.includes(m.short)){ monthCols[m.short] = i; matched = true; break; }
-                    }
+                if (!matched && (ht.includes('ราคา') || ht.toLowerCase().includes('price') || ht.match(/ม.ค.|ก.พ.|มี.ค.|เม.ย.|พ.ค.|มิ.ย.|ก.ค.|ส.ค.|ก.ย.|ต.ค.|พ.ย.|ธ.ค./))) {
+                    for(const m of MONTHS_MAP) { if(ht.includes(m.short)){ monthCols[m.short] = i; matched = true; break; } }
                     if(!matched) defaultPriceCol = i;
                 }
-            }
+            });
 
             const newData = [];
             for (let i = headerRowIndex + 1; i < parsedRows.length; i++) {
                 const row = parsedRows[i];
                 if (row.length > nameIdx && row[nameIdx] && row[nameIdx].trim() !== '') {
                     const itemName = row[nameIdx].replace(/^"|"$/g, '').trim();
-
-                    // ดึงราคาทุกเดือนมาเก็บไว้
                     const pricesObj = {};
                     let hasAnyMonthPrice = false;
-                    for (const m of MONTHS_MAP) {
+                    MONTHS_MAP.forEach(m => {
                         const idx = monthCols[m.short];
-                        if (idx !== undefined && row.length > idx && row[idx]) {
-                            const val = row[idx].trim();
-                            if (val !== '' && val !== '-') {
-                                pricesObj[m.short] = val;
-                                hasAnyMonthPrice = true;
-                            }
+                        if (idx !== undefined && row[idx] && row[idx].trim() !== '' && row[idx].trim() !== '-') {
+                            pricesObj[m.short] = row[idx].trim(); hasAnyMonthPrice = true;
                         }
-                    }
-                    if (!hasAnyMonthPrice && defaultPriceCol > -1 && row.length > defaultPriceCol && row[defaultPriceCol]) {
-                        const val = row[defaultPriceCol].trim();
-                        if (val !== '' && val !== '-') pricesObj['ล่าสุด'] = val;
-                    }
-
-                    let brand = "-";
-                    if (brandIdx > -1 && row.length > brandIdx && row[brandIdx] && row[brandIdx].trim() !== '') {
-                        brand = row[brandIdx].replace(/^"|"$/g, '').trim();
-                    } else {
-                        brand = extractBrand(itemName);
+                    });
+                    if (!hasAnyMonthPrice && defaultPriceCol > -1 && row[defaultPriceCol] && row[defaultPriceCol].trim() !== '' && row[defaultPriceCol].trim() !== '-') {
+                        pricesObj['ล่าสุด'] = row[defaultPriceCol].trim();
                     }
 
-                    // ใช้คอลัมน์ "รหัส" จากไฟล์ CSV เป็น ID หลัก (ถ้ามี) ผสมชื่อแหล่งข้อมูลเพื่อกันการซ้ำข้ามจังหวัด
-                    let generatedId = '';
-                    if (codeIdx > -1 && row.length > codeIdx && row[codeIdx] && row[codeIdx].trim() !== '') {
-                        generatedId = `${row[codeIdx].trim()}-${defaultSourceName}`;
-                    } else {
-                        const uniqueString = `${defaultSourceName}|${itemName}|${row[unitIdx]}|${i}`;
-                        generatedId = btoa(encodeURIComponent(uniqueString)).replace(/=/g,'').substring(0, 32);
+                    let brand = (brandIdx > -1 && row[brandIdx] && row[brandIdx].trim() !== '') ? row[brandIdx].replace(/^"|"$/g, '').trim() : (itemName.match(/ตรา\s*(.+)/)?.[1]?.trim() || "-");
+                    
+                    // ตัดข้อความตั้งแต่คำว่า "Model" หรือ "รุ่น" ออกไปให้เหลือแค่ชื่อยี่ห้อ (สำหรับใช้ใน Dropdown เท่านั้น)
+                    let filterBrand = brand;
+                    if (filterBrand !== '-') {
+                        filterBrand = filterBrand.replace(/\s*(?:model|รุ่น).*$/i, '').trim();
+                        if (!filterBrand) filterBrand = '-';
                     }
+
+                    let idStr = (codeIdx > -1 && row[codeIdx]) ? `${row[codeIdx].trim()}-${defaultSourceName}` : btoa(encodeURIComponent(`${defaultSourceName}|${itemName}|${row[unitIdx]}|${i}`)).replace(/=/g,'').substring(0, 32);
 
                     newData.push({
-                        id: generatedId,
-                        province: defaultSourceName,
+                        id: idStr, province: defaultSourceName,
                         category: catIdx > -1 ? (row[catIdx] || '') : '',
-                        name: itemName,
-                        brand: brand,
+                        name: itemName, 
+                        brand: brand,             // แสดงยี่ห้อและรุ่นเต็มในตาราง
+                        filterBrand: filterBrand, // ใช้ยี่ห้อที่ตัดรุ่นออกแล้วสำหรับตัวกรอง Dropdown
                         numericSizes: extractSizeValues(itemName),
-                        unit: row[unitIdx] || '-',
-                        prices: pricesObj
+                        unit: row[unitIdx] || '-', prices: pricesObj
                     });
                 }
             }
@@ -6247,837 +6218,373 @@
 
         const loadInitialData = () => {
             const sources = [
-                { id: 'csv-khonkaen', name: 'ขอนแก่น' },
-                { id: 'csv-chiangmai', name: 'เชียงใหม่' },
-                { id: 'csv-songkhla', name: 'สงขลา' },
-                { id: 'csv-central', name: 'ส่วนกลาง' },
-                { id: 'csv-fan', name: 'ส่วนกลาง' } // รวมเข้าส่วนกลาง
+                { id: 'csv-khonkaen', name: 'ขอนแก่น' }, { id: 'csv-chiangmai', name: 'เชียงใหม่' },
+                { id: 'csv-songkhla', name: 'สงขลา' }, { id: 'csv-central', name: 'ส่วนกลาง' }, { id: 'csv-fan', name: 'ส่วนกลาง' }
             ];
-
-            let loadedData = [];
+            let loaded = [];
             sources.forEach(src => {
                 const el = document.getElementById(src.id);
-                if (el && el.textContent.trim()) {
-                    loadedData.push(...processCSVData(el.textContent.trim(), src.name));
-                }
+                if (el && el.textContent.trim()) loaded.push(...processCSVData(el.textContent.trim(), src.name));
             });
-            return loadedData;
+            return loaded;
         };
 
-        // --- 4. Color Palette ---
-        const colorPalette = ['bg-blue-100 text-blue-800', 'bg-emerald-100 text-emerald-800', 'bg-violet-100 text-violet-800', 'bg-amber-100 text-amber-800', 'bg-rose-100 text-rose-800', 'bg-cyan-100 text-cyan-800', 'bg-fuchsia-100 text-fuchsia-800', 'bg-lime-100 text-lime-800', 'bg-orange-100 text-orange-800', 'bg-sky-100 text-sky-800', 'bg-pink-100 text-pink-800', 'bg-teal-100 text-teal-800'];
-        const styleCache = { category: {}, brand: {}, catIdx: 0, brandIdx: 0 };
-
-        const getColorClass = (val, type) => {
-            if (!val || val === '-') return 'bg-gray-100 text-gray-700 border border-gray-200';
-            const cache = styleCache[type];
-            if (!cache[val]) {
-                cache[val] = colorPalette[styleCache[`${type}Idx`] % colorPalette.length];
-                styleCache[`${type}Idx`]++;
-            }
-            return cache[val] + " border border-transparent";
-        };
-
-        // --- 5. DOM Elements ---
-        const fileInput = document.getElementById('fileInput');
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        const clearDataBtn = document.getElementById('clearDataBtn');
-        const exportBtn = document.getElementById('exportBtn');
-        
-        const searchInput = document.getElementById('searchInput');
-        const minSizeFilter = document.getElementById('minSizeFilter');
-        const maxSizeFilter = document.getElementById('maxSizeFilter');
-        const sizeUnitFilter = document.getElementById('sizeUnitFilter');
-        const categoryFilter = document.getElementById('categoryFilter');
-        const brandFilter = document.getElementById('brandFilter');
-        const monthFilter = document.getElementById('monthFilter');
-        const favFilterToggle = document.getElementById('favFilterToggle');
-        const favFilterIcon = document.getElementById('favFilterIcon');
-        
-        const provinceDropdownBtn = document.getElementById('provinceDropdownBtn');
-        const provinceDropdownText = document.getElementById('provinceDropdownText');
-        const provinceDropdownMenu = document.getElementById('provinceDropdownMenu');
-
-        const tableBody = document.getElementById('tableBody');
-        const recordCount = document.getElementById('recordCount');
-        const totalRecordCount = document.getElementById('totalRecordCount');
-
-        const sortPriceBtn = document.getElementById('sortPriceBtn');
-        const sortIconContainer = document.getElementById('sortIconContainer');
-        const priceHeaderMonth = document.getElementById('priceHeaderMonth');
-
-        const prevPageBtn = document.getElementById('prevPageBtn');
-        const nextPageBtn = document.getElementById('nextPageBtn');
-        const firstPageBtn = document.getElementById('firstPageBtn');
-        const lastPageBtn = document.getElementById('lastPageBtn');
-        const pageInput = document.getElementById('pageInput');
-        const itemsPerPageSelect = document.getElementById('itemsPerPageSelect');
-
-        // Changelog DOM Elements
-        const changelogBtn = document.getElementById('changelogBtn');
-        const changelogBtnDesktop = document.getElementById('changelogBtnDesktop');
-        const changelogModal = document.getElementById('changelogModal');
-        const closeChangelogBtn = document.getElementById('closeChangelogBtn');
-        const changelogViewMode = document.getElementById('changelogViewMode');
-        const changelogEditMode = document.getElementById('changelogEditMode');
-        const adminEditBtn = document.getElementById('adminEditBtn');
-        const cancelEditBtn = document.getElementById('cancelEditBtn');
-        const saveChangelogBtn = document.getElementById('saveChangelogBtn');
-        const headerVersionText = document.getElementById('headerVersionText');
-        const headerVersionTextMobile = document.getElementById('headerVersionTextMobile');
-
-        // --- 6. UI Logic & Render ---
+        // --- 5. RENDER & FILTER LOGIC ---
         const renderChangelog = () => {
-            changelogViewMode.innerHTML = changelogData.map((item, index) => `
-                <div class="relative pl-4 ${index !== changelogData.length - 1 ? 'border-l-2 border-blue-100 pb-6' : ''}">
-                    <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full ${index === 0 ? 'bg-blue-500 ring-4 ring-blue-50' : 'bg-gray-300'}"></div>
+            els.changelogViewMode.innerHTML = changelogData.map((item, index) => `
+                <div class="relative pl-4 ${index !== changelogData.length - 1 ? 'border-l-2 border-blue-100 dark:border-blue-900 pb-6' : ''}">
+                    <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full ${index === 0 ? 'bg-blue-500 ring-4 ring-blue-50 dark:ring-blue-900/30' : 'bg-gray-300 dark:bg-gray-600'}"></div>
                     <div class="flex items-center gap-3 mb-2">
-                        <span class="font-bold text-gray-800 text-base">${item.version}</span>
-                        <span class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">${item.date}</span>
-                        ${index === 0 ? '<span class="text-[10px] font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-md uppercase tracking-wider">Latest</span>' : ''}
+                        <span class="font-bold text-gray-800 dark:text-gray-200 text-base">${item.version}</span>
+                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full">${item.date}</span>
+                        ${index === 0 ? '<span class="text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 rounded-md uppercase tracking-wider">Latest</span>' : ''}
                     </div>
-                    <ul class="list-disc pl-5 text-sm text-gray-600 space-y-1.5 leading-relaxed">
+                    <ul class="list-disc pl-5 text-sm text-gray-600 dark:text-gray-400 space-y-1.5 leading-relaxed">
                         ${item.changes.map(c => `<li>${c}</li>`).join('')}
                     </ul>
                 </div>
             `).join('');
             
-            // อัปเดตข้อความบน Header ให้เป็น Version ล่าสุดเสมอ
             if(changelogData.length > 0) {
-                const latestVersionStr = `${changelogData[0].version} ${changelogData[0].date}`;
-                headerVersionText.textContent = latestVersionStr;
-                headerVersionTextMobile.textContent = changelogData[0].version; // มือถือโชว์แค่ V.
+                els.headerVersionText.textContent = `${changelogData[0].version} ${changelogData[0].date}`;
+                els.headerVersionTextMobile.textContent = changelogData[0].version;
             }
             lucide.createIcons();
         };
 
         const renderAdminChangelogList = () => {
-            const listContainer = document.getElementById('adminChangelogList');
             if(changelogData.length === 0) {
-                listContainer.innerHTML = '<div class="text-xs text-gray-400 text-center py-2">ไม่มีประวัติการอัปเดต</div>';
-                return;
+                els.adminChangelogList.innerHTML = '<div class="text-xs text-gray-400 text-center py-2">ไม่มีประวัติการอัปเดต</div>'; return;
             }
-            listContainer.innerHTML = changelogData.map((item, idx) => `
-                <div class="bg-gray-50 hover:bg-gray-100 p-2.5 rounded border border-gray-200 flex justify-between items-start gap-2 transition-colors">
+            els.adminChangelogList.innerHTML = changelogData.map((item, idx) => `
+                <div class="bg-gray-50 dark:bg-gray-800/80 hover:bg-gray-100 dark:hover:bg-gray-700 p-2.5 rounded border border-gray-200 dark:border-gray-600 flex justify-between items-start gap-2 transition-colors">
                     <div class="flex-1">
-                        <div class="font-bold text-sm text-gray-800">${item.version} <span class="text-[11px] font-normal text-gray-500 bg-gray-200 px-1.5 py-0.5 rounded ml-1">${item.date}</span></div>
-                        <div class="text-[11px] text-gray-500 mt-1 line-clamp-1">${item.changes.join(', ')}</div>
+                        <div class="font-bold text-sm text-gray-800 dark:text-gray-200">${item.version} <span class="text-[11px] font-normal text-gray-500 bg-gray-200 dark:bg-gray-700 px-1.5 py-0.5 rounded ml-1">${item.date}</span></div>
+                        <div class="text-[11px] text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">${item.changes.join(', ')}</div>
                     </div>
                     <div class="flex gap-1 shrink-0">
-                        <button onclick="window.editChangelogItem(${idx})" class="text-blue-600 hover:text-blue-800 p-1.5 bg-white border border-blue-100 rounded shadow-sm hover:bg-blue-50 transition-colors" title="แก้ไข"><i data-lucide="edit" class="w-3.5 h-3.5"></i></button>
-                        <button onclick="window.deleteChangelogItem(${idx})" class="text-red-600 hover:text-red-800 p-1.5 bg-white border border-red-100 rounded shadow-sm hover:bg-red-50 transition-colors" title="ลบ"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                        <button onclick="window.editChangelogItem(${idx})" class="text-blue-600 dark:text-blue-400 p-1.5 bg-white dark:bg-gray-700 border border-blue-100 dark:border-blue-800 rounded shadow-sm hover:bg-blue-50 dark:hover:bg-gray-600"><i data-lucide="edit" class="w-3.5 h-3.5"></i></button>
+                        <button onclick="window.deleteChangelogItem(${idx})" class="text-red-600 dark:text-red-400 p-1.5 bg-white dark:bg-gray-700 border border-red-100 dark:border-red-900 rounded shadow-sm hover:bg-red-50 dark:hover:bg-gray-600"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
                     </div>
                 </div>
             `).join('');
             lucide.createIcons();
         };
 
-        // --- BOQ Parser Logic ---
-        const getSearchKeywordGroups = () => {
-            const term = searchInput.value.trim().toLowerCase();
-            const lines = term.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-            let searchQueries = [];
-            let currentHeader = '';
+        const updateFiltersUI = () => {
+            const cCat = els.categoryFilter.value, cBrand = els.brandFilter.value;
+            const kwGroups = getSearchKeywordGroups();
+            const minSize = parseFloat(els.minSizeFilter.value), maxSize = parseFloat(els.maxSizeFilter.value), targetUnit = els.sizeUnitFilter.value;
+            const isFavOnly = els.favFilterToggle.checked;
 
-            if (lines.length > 0) {
-                for (let i = 0; i < lines.length; i++) {
-                    const line = lines[i];
-                    // เช็คว่าบรรทัดนี้เป็นรายการย่อยหรือไม่ (เริ่มด้วย - หรือ bullet)
-                    if (line.match(/^[-•*]/)) {
-                        const subItem = line.replace(/^[-•*]\s*/, '');
-                        searchQueries.push(`${currentHeader} ${subItem}`);
-                    } else {
-                        // เช็คว่าบรรทัดถัดไปเป็นรายการย่อยหรือไม่
-                        if (i + 1 < lines.length && lines[i+1].match(/^[-•*]/)) {
-                            currentHeader = line;
-                        } else {
-                            currentHeader = line;
-                            searchQueries.push(line);
-                        }
-                    }
-                }
-            }
+            // Categories & Provinces (Global)
+            const cats = [...new Set(appData.map(i => i.category))].filter(Boolean).sort();
+            const provs = [...new Set(appData.map(i => i.province))].filter(Boolean).sort();
+            els.categoryFilter.innerHTML = '<option value="">ทุกหมวดสินค้า</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
+            if (cats.includes(cCat)) els.categoryFilter.value = cCat;
 
-            return searchQueries.map(text => {
-                const extractedSizes = [];
-                // Regex รองรับรูปแบบเช่น Dia.20 mm, 15 mm ID, 1/2", 1 1/2 นิ้ว
-                const regex = /(?:dia\.?)?\s*(\d+(?:\.\d+)?|\d+\/\d+|\d+\s+\d+\/\d+)\s*(mm|มม\.?|นิ้ว|"|ตร\.มม\.|sqmm)/gi;
-                let cleanedText = text;
-                let m;
-                while ((m = regex.exec(text)) !== null) {
-                    let val = parseSizeToFloat(m[1].trim());
-                    let unitStr = m[2].toLowerCase();
-                    let unit = 'unknown';
-                    if (unitStr.includes('นิ้ว') || unitStr.includes('"')) unit = 'inch';
-                    else if (unitStr.includes('ตร.มม.') || unitStr.includes('sqmm')) unit = 'sqmm';
-                    else if (unitStr.includes('มม') || unitStr.includes('mm')) unit = 'mm';
+            els.provinceMenu.innerHTML = `
+                <label class="flex items-center px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer text-gray-700 dark:text-gray-200 text-sm font-medium">
+                    <input type="checkbox" value="all" class="h-4 w-4 rounded mr-3" ${selectedProvinces.length === 0 ? 'checked' : ''}> ทุกพื้นที่
+                </label>
+            ` + provs.map(p => `
+                <label class="flex items-center px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer text-gray-700 dark:text-gray-300 text-sm">
+                    <input type="checkbox" value="${p}" class="province-checkbox h-4 w-4 rounded mr-3" ${selectedProvinces.includes(p) ? 'checked' : ''}> ${p}
+                </label>
+            `).join('');
 
-                    if (val !== null && !isNaN(val)) extractedSizes.push({ value: val, unit: unit });
-                    // นำขนาดที่ดึงได้ลบออกจากประโยคค้นหา ป้องกันไม่ให้ไปรบกวนระบบหาสตริงปกติ
-                    cleanedText = cleanedText.replace(m[0], ' ');
-                }
-                
-                // ลบคำว่า ID, OD ออกไปเพื่อไม่ให้กวน keyword
-                cleanedText = cleanedText.replace(/\b(id|od)\b/gi, ' ');
-
-                return {
-                    keywords: cleanedText.replace(/[()\[\]{},"']/g, ' ').split(/\s+/).filter(k => k.length > 0),
-                    extractedSizes: extractedSizes
-                };
-            });
-        };
-
-        const updateBrandOptions = () => {
-            const cCat = categoryFilter.value;
-            const cBrand = brandFilter.value;
+            const updateProvText = () => { els.provinceText.textContent = selectedProvinces.length === 0 ? "ทุกพื้นที่" : (selectedProvinces.length === 1 ? selectedProvinces[0] : `เลือก ${selectedProvinces.length} พื้นที่`); };
+            const allCb = els.provinceMenu.querySelector('input[value="all"]');
+            const provCbs = els.provinceMenu.querySelectorAll('.province-checkbox');
             
-            // นำเงื่อนไขการค้นหาและขนาดมาใช้กรองยี่ห้อด้วย
-            const isFavOnly = favFilterToggle.checked;
-            const minSize = parseFloat(minSizeFilter.value);
-            const maxSize = parseFloat(maxSizeFilter.value);
-            const targetUnit = sizeUnitFilter.value;
-            
-            const keywordGroups = getSearchKeywordGroups();
+            allCb.addEventListener('change', (e) => { if (e.target.checked) { selectedProvinces = []; provCbs.forEach(cb => cb.checked = false); updateProvText(); updateFiltersUI(); applyFilters(); } else if (selectedProvinces.length === 0) e.target.checked = true; });
+            provCbs.forEach(cb => { cb.addEventListener('change', (e) => {
+                if (e.target.checked) selectedProvinces.push(e.target.value); else selectedProvinces = selectedProvinces.filter(p => p !== e.target.value);
+                allCb.checked = selectedProvinces.length === 0; updateProvText(); updateFiltersUI(); applyFilters();
+            });});
+            updateProvText();
 
-            // กรองแหล่งข้อมูลที่จะดึงยี่ห้อตามเงื่อนไขทั้งหมด (ยกเว้นตัวยี่ห้อเอง)
-            let brandSourceData = appData.filter(item => {
+            // Brands (Contextual)
+            const brandSource = appData.filter(item => {
                 if (isFavOnly && !favoriteIds.has(item.id)) return false;
                 if (cCat && item.category !== cCat) return false;
                 if (selectedProvinces.length > 0 && !selectedProvinces.includes(item.province)) return false;
                 
-                let matchSearch = true;
-                if (keywordGroups.length > 0) {
-                    const normalizedName = item.name.toLowerCase().replace(/[()\[\]{},"'\s]/g, '');
-                    matchSearch = keywordGroups.some(group => {
-                        // 1. ตรวจสอบ Keyword ทั่วไป
-                        const matchKws = group.keywords.every(k => {
-                            const cleanK = k.replace(/[()\[\]{},"'\s]/g, '');
-                            return normalizedName.includes(cleanK);
-                        });
-                        if (!matchKws) return false;
-
-                        // 2. ตรวจสอบขนาดที่ดึงอัตโนมัติมาจากข้อความที่พิมพ์ค้นหา (ถ้ามี)
-                        if (group.extractedSizes.length > 0) {
-                            if (!item.numericSizes || item.numericSizes.length === 0) return false;
-                            const matchExtractedSz = group.extractedSizes.some(extracted => {
-                                return item.numericSizes.some(s => {
-                                    let convertedVal = s.value;
-                                    if (extracted.unit === 'inch' && s.unit === 'mm') convertedVal = s.value / 25.4;
-                                    else if (extracted.unit === 'mm' && s.unit === 'inch') convertedVal = s.value * 25.4;
-                                    else if (extracted.unit !== 'any' && s.unit !== 'unknown' && extracted.unit !== s.unit) return false;
-
-                                    let margin = (extracted.unit === 'inch' && s.unit === 'mm') ? 0.05 : (extracted.unit === 'mm' && s.unit === 'inch' ? 1.5 : 0);
-                                    return Math.abs(convertedVal - extracted.value) <= margin;
-                                });
-                            });
-                            if (!matchExtractedSz) return false;
-                        }
-                        return true;
-                    });
+                if (kwGroups.length > 0) {
+                    const normName = item.name.toLowerCase().replace(/[()\[\]{},"'\s]/g, '');
+                    const match = kwGroups.some(g => g.keywords.every(k => normName.includes(k.replace(/[()\[\]{},"'\s]/g, ''))) && (g.extractedSizes.length === 0 || g.extractedSizes.some(ext => item.numericSizes?.some(s => {
+                        let cVal = s.value; if (ext.unit === 'inch' && s.unit === 'mm') cVal /= 25.4; else if (ext.unit === 'mm' && s.unit === 'inch') cVal *= 25.4; else if (ext.unit !== 'any' && s.unit !== 'unknown' && ext.unit !== s.unit) return false;
+                        return Math.abs(cVal - ext.value) <= ((ext.unit === 'inch' && s.unit === 'mm') ? 0.05 : (ext.unit === 'mm' && s.unit === 'inch' ? 1.5 : 0));
+                    }))));
+                    if (!match) return false;
                 }
-                if (!matchSearch) return false;
-
                 if (!isNaN(minSize) || !isNaN(maxSize)) {
                     if (!item.numericSizes || item.numericSizes.length === 0) return false;
-                    const matchSize = item.numericSizes.some(s => {
-                        let convertedVal = s.value;
-                        if (targetUnit === 'inch' && s.unit === 'mm') convertedVal = s.value / 25.4;
-                        else if (targetUnit === 'mm' && s.unit === 'inch') convertedVal = s.value * 25.4;
-                        else if (targetUnit !== 'any' && s.unit !== 'unknown' && targetUnit !== s.unit) return false;
-
-                        let margin = (targetUnit === 'inch' && s.unit === 'mm') ? 0.05 : (targetUnit === 'mm' && s.unit === 'inch' ? 1.5 : 0);
-                        if (!isNaN(minSize) && convertedVal < (minSize - margin)) return false;
-                        if (!isNaN(maxSize) && convertedVal > (maxSize + margin)) return false;
-                        return true;
+                    const match = item.numericSizes.some(s => {
+                        let cVal = s.value; if (targetUnit === 'inch' && s.unit === 'mm') cVal /= 25.4; else if (targetUnit === 'mm' && s.unit === 'inch') cVal *= 25.4; else if (targetUnit !== 'any' && s.unit !== 'unknown' && targetUnit !== s.unit) return false;
+                        let m = (targetUnit === 'inch' && s.unit === 'mm') ? 0.05 : (targetUnit === 'mm' && s.unit === 'inch' ? 1.5 : 0);
+                        return (!isNaN(minSize) ? cVal >= minSize - m : true) && (!isNaN(maxSize) ? cVal <= maxSize + m : true);
                     });
-                    if (!matchSize) return false;
+                    if (!match) return false;
                 }
-                
                 return true;
             });
-
-            const brands = [...new Set(brandSourceData.map(i => i.brand))].filter(b => b && b !== '-').sort();
-
-            brandFilter.innerHTML = '<option value="">ทุกยี่ห้อ</option>' + brands.map(b => `<option value="${b}">${b}</option>`).join('');
-
-            // คงค่ายี่ห้อเดิมไว้ถ้ายี่ห้อนั้นยังมีอยู่ในหมวดใหม่ ถ้าไม่มีให้เคลียร์ค่า
-            if (brands.includes(cBrand)) {
-                brandFilter.value = cBrand;
-            } else {
-                brandFilter.value = "";
-            }
-        };
-
-        const updateDropdownOptions = () => {
-            const categories = [...new Set(appData.map(i => i.category))].filter(Boolean).sort();
-            const provinces = [...new Set(appData.map(i => i.province))].filter(Boolean).sort();
-
-            const cCat = categoryFilter.value;
-
-            categoryFilter.innerHTML = '<option value="">ทุกหมวดสินค้า</option>' + categories.map(c => `<option value="${c}">${c}</option>`).join('');
-            
-            provinceDropdownMenu.innerHTML = `
-                <label class="flex items-center px-4 py-2.5 hover:bg-gray-50 cursor-pointer">
-                    <input type="checkbox" value="all" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-3" ${selectedProvinces.length === 0 ? 'checked' : ''}>
-                    <span class="text-gray-700 text-sm font-medium">ทุกพื้นที่</span>
-                </label>
-            ` + provinces.map(p => `
-                <label class="flex items-center px-4 py-2 hover:bg-gray-50 cursor-pointer">
-                    <input type="checkbox" value="${p}" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-3 province-checkbox" ${selectedProvinces.includes(p) ? 'checked' : ''}>
-                    <span class="text-gray-700 text-sm">${p}</span>
-                </label>
-            `).join('');
-
-            if (categories.includes(cCat)) categoryFilter.value = cCat;
-            
-            const provCheckboxes = provinceDropdownMenu.querySelectorAll('.province-checkbox');
-            const allCheckbox = provinceDropdownMenu.querySelector('input[value="all"]');
-            
-            const updateProvText = () => {
-                provinceDropdownText.textContent = selectedProvinces.length === 0 ? "ทุกพื้นที่" : (selectedProvinces.length === 1 ? selectedProvinces[0] : `เลือก ${selectedProvinces.length} พื้นที่`);
-            };
-
-            allCheckbox.addEventListener('change', (e) => {
-                if (e.target.checked) {
-                    selectedProvinces = [];
-                    provCheckboxes.forEach(cb => cb.checked = false);
-                    updateProvText(); updateBrandOptions(); applyFilters();
-                } else if (selectedProvinces.length === 0) e.target.checked = true;
-            });
-
-            provCheckboxes.forEach(cb => {
-                cb.addEventListener('change', (e) => {
-                    const val = e.target.value;
-                    if (e.target.checked) selectedProvinces.push(val);
-                    else selectedProvinces = selectedProvinces.filter(p => p !== val);
-                    allCheckbox.checked = selectedProvinces.length === 0;
-                    updateProvText(); updateBrandOptions(); applyFilters();
-                });
-            });
-            updateProvText();
-
-            updateBrandOptions(); // อัปเดตรายการยี่ห้อทุกครั้งที่มีการรีเฟรช Dropdown
-        };
-
-        const renderTable = () => {
-            totalRecordCount.textContent = appData.length.toLocaleString();
-            recordCount.textContent = filteredData.length.toLocaleString();
-
-            const totalPages = Math.ceil(filteredData.length / itemsPerPage) || 1;
-            if (currentPage > totalPages) currentPage = totalPages;
-
-            const startIdx = (currentPage - 1) * itemsPerPage;
-            const endIdx = Math.min(startIdx + itemsPerPage, filteredData.length);
-            const pageData = filteredData.slice(startIdx, endIdx);
-
-            document.getElementById('pageStartText').textContent = filteredData.length > 0 ? startIdx + 1 : 0;
-            document.getElementById('pageEndText').textContent = endIdx;
-            pageInput.value = currentPage;
-            document.getElementById('totalPagesText').textContent = totalPages;
-
-            firstPageBtn.disabled = currentPage === 1;
-            prevPageBtn.disabled = currentPage === 1;
-            nextPageBtn.disabled = currentPage === totalPages;
-            lastPageBtn.disabled = currentPage === totalPages;
-
-            if (filteredData.length === 0) {
-                tableBody.innerHTML = `<tr><td colSpan="7" class="px-6 py-16 text-center text-gray-500"><div class="flex flex-col items-center justify-center"><i data-lucide="database" class="h-12 w-12 text-gray-300 mb-4"></i><p class="text-lg font-medium text-gray-600">ไม่มีข้อมูลที่แสดงผล</p><p class="text-sm mt-1">ลองเปลี่ยนคำค้นหา หรืออัปโหลดไฟล์เพิ่ม</p></div></td></tr>`;
-            } else {
-                tableBody.innerHTML = pageData.map(row => {
-                    // Trend Icons HTML
-                    let trendHtml = '';
-                    if (row.trend === 'up') trendHtml = `<i data-lucide="trending-up" class="w-4 h-4 text-rose-500 ml-1" title="ราคาขึ้นจากเดือน ${row.prevMonth} (${row.prevPrice})"></i>`;
-                    else if (row.trend === 'down') trendHtml = `<i data-lucide="trending-down" class="w-4 h-4 text-emerald-500 ml-1" title="ราคาลดลงจากเดือน ${row.prevMonth} (${row.prevPrice})"></i>`;
-                    else if (row.trend === 'equal') trendHtml = `<i data-lucide="minus" class="w-4 h-4 text-gray-300 ml-1" title="ราคาคงที่จากเดือน ${row.prevMonth}"></i>`;
-
-                    // History Tooltip HTML (ประวัติย้อนหลัง 4 เดือน)
-                    let historyHtml = '<div class="text-gray-400 text-center py-1">ไม่มีข้อมูลย้อนหลัง</div>';
-                    if (row.history && row.history.length > 0) {
-                        historyHtml = row.history.map(h => `
-                            <div class="flex justify-between py-1 border-b border-gray-600 last:border-0 gap-4">
-                                <span>${h.month}</span>
-                                <span class="font-medium text-white">${h.price} ฿</span>
-                            </div>
-                        `).join('');
-                    }
-
-                    return `
-                    <tr class="hover:bg-blue-50/50 transition-colors group">
-                        <td class="px-4 py-4 text-center">
-                            <button onclick="window.toggleFavorite('${row.id}')" class="focus:outline-none transition-transform hover:scale-110">
-                                <i data-lucide="star" class="w-5 h-5 ${favoriteIds.has(row.id) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300 hover:text-gray-400'}"></i>
-                            </button>
-                        </td>
-                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 font-medium">${row.province}</td>
-                        <td class="px-4 py-4 text-sm"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium ${getColorClass(row.category, 'category')}">${row.category}</span></td>
-                        <td class="px-4 py-4 text-sm text-gray-900 leading-snug">${row.name}</td>
-                        <td class="px-4 py-4 whitespace-nowrap text-sm"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium ${getColorClass(row.brand, 'brand')}">${row.brand}</span></td>
-                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 text-center">${row.unit}</td>
-                        
-                        <!-- Added 'group/price' for Tooltip implementation on hover -->
-                        <td class="px-4 py-4 whitespace-nowrap text-right relative group/price cursor-default">
-                            <div class="flex items-center justify-end">
-                                <span class="text-sm font-semibold text-gray-900">${row.displayPrice}</span>
-                                ${row.displayPrice !== 'ไม่มีข้อมูล' ? `<span class="text-sm text-gray-500 ml-1">฿</span>` : ''}
-                                ${trendHtml}
-                            </div>
-                            ${row.displayMonth && monthFilter.value === 'latest' ? `<div class="text-[10px] text-gray-400 mt-0.5">(${row.displayMonth})</div>` : ''}
-                            
-                            <!-- Tooltip ประวัติ 4 เดือนซ่อนอยู่ จะแสดงเมื่อเอาเมาส์ชี้ช่องราคา -->
-                            <div class="hidden md:group-hover/price:block absolute right-[95%] top-1/2 -translate-y-1/2 mr-3 w-40 bg-gray-800 text-gray-200 text-[11px] rounded-lg shadow-xl z-50 p-2.5 text-left border border-gray-700 pointer-events-none">
-                                <div class="font-semibold text-gray-100 mb-1 border-b border-gray-600 pb-1.5 flex items-center gap-1.5">
-                                    <i data-lucide="history" class="w-3 h-3 text-gray-400"></i> ประวัติราคา 4 เดือน
-                                </div>
-                                ${historyHtml}
-                                <!-- ลูกศรชี้ของ Tooltip -->
-                                <div class="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-gray-800 border-t border-r border-gray-700 transform rotate-45"></div>
-                            </div>
-                        </td>
-                    </tr>
-                `}).join('');
-            }
-            lucide.createIcons();
+            const brands = [...new Set(brandSource.map(i => i.filterBrand))].filter(b => b && b !== '-').sort();
+            els.brandFilter.innerHTML = '<option value="">ทุกยี่ห้อ</option>' + brands.map(b => `<option value="${b}">${b}</option>`).join('');
+            els.brandFilter.value = brands.includes(cBrand) ? cBrand : "";
         };
 
         const applyFilters = () => {
-            const cat = categoryFilter.value;
-            const brand = brandFilter.value;
-            const targetMonth = monthFilter.value;
-            const isFavOnly = favFilterToggle.checked;
+            const cat = els.categoryFilter.value, brand = els.brandFilter.value, tMonth = els.monthFilter.value, isFavOnly = els.favFilterToggle.checked;
+            const minSize = parseFloat(els.minSizeFilter.value), maxSize = parseFloat(els.maxSizeFilter.value), tUnit = els.sizeUnitFilter.value;
+            const kwGroups = getSearchKeywordGroups();
             
-            const minSize = parseFloat(minSizeFilter.value);
-            const maxSize = parseFloat(maxSizeFilter.value);
-            const targetUnit = sizeUnitFilter.value;
+            els.priceHeaderMonth.textContent = tMonth === 'latest' ? '' : `(${tMonth})`;
 
-            const keywordGroups = getSearchKeywordGroups();
-
-            // Update UI for month header
-            priceHeaderMonth.textContent = targetMonth === 'latest' ? '' : `(${targetMonth})`;
-
-            // 1. Process and Filter
             filteredData = appData.filter(item => {
-                // Favorite
                 if (isFavOnly && !favoriteIds.has(item.id)) return false;
-
-                // Category, Brand, Province
                 if (cat && item.category !== cat) return false;
-                if (brand && item.brand !== brand) return false;
+                if (brand && item.filterBrand !== brand) return false;
                 if (selectedProvinces.length > 0 && !selectedProvinces.includes(item.province)) return false;
 
-                // Search (BOQ Style Support + Auto Size Extraction)
-                let matchSearch = true;
-                if (keywordGroups.length > 0) {
-                    const normalizedName = item.name.toLowerCase().replace(/[()\[\]{},"'\s]/g, '');
-                    matchSearch = keywordGroups.some(group => {
-                        const matchKws = group.keywords.every(k => {
-                            const cleanK = k.replace(/[()\[\]{},"'\s]/g, '');
-                            return normalizedName.includes(cleanK);
-                        });
-                        if (!matchKws) return false;
-
-                        if (group.extractedSizes.length > 0) {
-                            if (!item.numericSizes || item.numericSizes.length === 0) return false;
-                            const matchExtractedSz = group.extractedSizes.some(extracted => {
-                                return item.numericSizes.some(s => {
-                                    let convertedVal = s.value;
-                                    if (extracted.unit === 'inch' && s.unit === 'mm') convertedVal = s.value / 25.4;
-                                    else if (extracted.unit === 'mm' && s.unit === 'inch') convertedVal = s.value * 25.4;
-                                    else if (extracted.unit !== 'any' && s.unit !== 'unknown' && extracted.unit !== s.unit) return false;
-
-                                    let margin = (extracted.unit === 'inch' && s.unit === 'mm') ? 0.05 : (extracted.unit === 'mm' && s.unit === 'inch' ? 1.5 : 0);
-                                    return Math.abs(convertedVal - extracted.value) <= margin;
-                                });
-                            });
-                            if (!matchExtractedSz) return false;
-                        }
-                        return true;
-                    });
+                if (kwGroups.length > 0) {
+                    const normName = item.name.toLowerCase().replace(/[()\[\]{},"'\s]/g, '');
+                    const matchSearch = kwGroups.some(g => g.keywords.every(k => normName.includes(k.replace(/[()\[\]{},"'\s]/g, ''))) && (g.extractedSizes.length === 0 || g.extractedSizes.some(ext => item.numericSizes?.some(s => {
+                        let cVal = s.value; if (ext.unit === 'inch' && s.unit === 'mm') cVal /= 25.4; else if (ext.unit === 'mm' && s.unit === 'inch') cVal *= 25.4; else if (ext.unit !== 'any' && s.unit !== 'unknown' && ext.unit !== s.unit) return false;
+                        return Math.abs(cVal - ext.value) <= ((ext.unit === 'inch' && s.unit === 'mm') ? 0.05 : (ext.unit === 'mm' && s.unit === 'inch' ? 1.5 : 0));
+                    }))));
+                    if (!matchSearch) return false;
                 }
-                if (!matchSearch) return false;
 
-                // Size
                 if (!isNaN(minSize) || !isNaN(maxSize)) {
                     if (!item.numericSizes || item.numericSizes.length === 0) return false;
                     const matchSize = item.numericSizes.some(s => {
-                        let convertedVal = s.value;
-                        if (targetUnit === 'inch' && s.unit === 'mm') convertedVal = s.value / 25.4;
-                        else if (targetUnit === 'mm' && s.unit === 'inch') convertedVal = s.value * 25.4;
-                        else if (targetUnit !== 'any' && s.unit !== 'unknown' && targetUnit !== s.unit) return false;
-
-                        let margin = (targetUnit === 'inch' && s.unit === 'mm') ? 0.05 : (targetUnit === 'mm' && s.unit === 'inch' ? 1.5 : 0);
-                        if (!isNaN(minSize) && convertedVal < (minSize - margin)) return false;
-                        if (!isNaN(maxSize) && convertedVal > (maxSize + margin)) return false;
-                        return true;
+                        let cVal = s.value; if (tUnit === 'inch' && s.unit === 'mm') cVal /= 25.4; else if (tUnit === 'mm' && s.unit === 'inch') cVal *= 25.4; else if (tUnit !== 'any' && s.unit !== 'unknown' && tUnit !== s.unit) return false;
+                        let m = (tUnit === 'inch' && s.unit === 'mm') ? 0.05 : (tUnit === 'mm' && s.unit === 'inch' ? 1.5 : 0);
+                        return (!isNaN(minSize) ? cVal >= minSize - m : true) && (!isNaN(maxSize) ? cVal <= maxSize + m : true);
                     });
                     if (!matchSize) return false;
                 }
 
-                // Get Price Info specific to selected month (พร้อมดึงประวัติราคาด้วย)
-                const pInfo = getPriceInfo(item.prices, targetMonth);
-                item.displayPrice = pInfo.currentPrice;
-                item.displayMonth = pInfo.currentMonth;
-                item.prevPrice = pInfo.prevPrice;
-                item.prevMonth = pInfo.prevMonth;
-                item.history = pInfo.history;
+                const pInfo = getPriceInfo(item.prices, tMonth);
+                item.displayPrice = pInfo.currentPrice; item.displayMonth = pInfo.currentMonth;
+                item.prevPrice = pInfo.prevPrice; item.prevMonth = pInfo.prevMonth; item.history = pInfo.history;
 
-                // Calculate Trend
-                const cp = parseFloat(item.displayPrice.toString().replace(/,/g, ''));
-                const pp = parseFloat(item.prevPrice.toString().replace(/,/g, ''));
-                item.trend = 'none';
-                if (!isNaN(cp) && !isNaN(pp)) {
-                    if (cp > pp) item.trend = 'up';
-                    else if (cp < pp) item.trend = 'down';
-                    else item.trend = 'equal';
-                }
-
+                const cp = parseFloat(item.displayPrice.toString().replace(/,/g, '')), pp = parseFloat(item.prevPrice.toString().replace(/,/g, ''));
+                item.trend = (!isNaN(cp) && !isNaN(pp)) ? (cp > pp ? 'up' : (cp < pp ? 'down' : 'equal')) : 'none';
                 return true;
             });
 
-            // 2. Sort
             if (currentSortOrder !== 'default') {
                 filteredData.sort((a, b) => {
-                    const priceA = parseFloat(a.displayPrice.toString().replace(/,/g, ''));
-                    const priceB = parseFloat(b.displayPrice.toString().replace(/,/g, ''));
-                    if (isNaN(priceA) && isNaN(priceB)) return 0;
-                    if (isNaN(priceA)) return 1;
-                    if (isNaN(priceB)) return -1;
-                    return currentSortOrder === 'asc' ? priceA - priceB : priceB - priceA;
+                    const pa = parseFloat(a.displayPrice.toString().replace(/,/g, '')), pb = parseFloat(b.displayPrice.toString().replace(/,/g, ''));
+                    if (isNaN(pa) && isNaN(pb)) return 0; if (isNaN(pa)) return 1; if (isNaN(pb)) return -1;
+                    return currentSortOrder === 'asc' ? pa - pb : pb - pa;
                 });
             }
-
-            currentPage = 1; // Reset page on new filter
-            renderTable();
+            currentPage = 1; renderTable();
         };
 
-        // --- 7. Event Listeners ---
-        provinceDropdownBtn.addEventListener('click', (e) => { e.stopPropagation(); provinceDropdownMenu.classList.toggle('hidden'); });
-        document.addEventListener('click', (e) => { if (!provinceDropdownBtn.contains(e.target) && !provinceDropdownMenu.contains(e.target)) provinceDropdownMenu.classList.add('hidden'); });
+        const renderTable = () => {
+            els.totalRecordCount.textContent = appData.length.toLocaleString();
+            els.recordCount.textContent = filteredData.length.toLocaleString();
 
-        sortPriceBtn.addEventListener('click', () => {
-            currentSortOrder = (currentSortOrder === 'default' || currentSortOrder === 'desc') ? 'asc' : 'desc';
-            sortIconContainer.innerHTML = currentSortOrder === 'asc' ? '<i data-lucide="arrow-up" class="w-3 h-3 text-blue-600"></i>' : '<i data-lucide="arrow-down" class="w-3 h-3 text-blue-600"></i>';
-            applyFilters();
-        });
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+            const startIdx = (currentPage - 1) * itemsPerPage;
+            const pageData = filteredData.slice(startIdx, Math.min(startIdx + itemsPerPage, filteredData.length));
 
-        favFilterToggle.addEventListener('change', (e) => {
-            if (e.target.checked) {
-                favFilterIcon.classList.remove('text-gray-300');
-                favFilterIcon.classList.add('text-yellow-500', 'fill-yellow-500');
+            els.pageStartText.textContent = filteredData.length > 0 ? startIdx + 1 : 0;
+            els.pageEndText.textContent = Math.min(startIdx + itemsPerPage, filteredData.length);
+            els.pageInput.value = currentPage;
+            els.totalPagesText.textContent = totalPages;
+
+            els.firstPageBtn.disabled = els.prevPageBtn.disabled = currentPage === 1;
+            els.nextPageBtn.disabled = els.lastPageBtn.disabled = currentPage === totalPages;
+
+            if (filteredData.length === 0) {
+                els.tableBody.innerHTML = `<tr><td colSpan="7" class="px-6 py-16 text-center text-gray-500 dark:text-gray-400"><div class="flex flex-col items-center justify-center"><i data-lucide="database" class="h-12 w-12 text-gray-300 dark:text-gray-600 mb-4"></i><p class="text-lg font-medium">ไม่มีข้อมูลที่แสดงผล</p></div></td></tr>`;
             } else {
-                favFilterIcon.classList.add('text-gray-300');
-                favFilterIcon.classList.remove('text-yellow-500', 'fill-yellow-500');
+                els.tableBody.innerHTML = pageData.map(row => {
+                    const tHtml = row.trend === 'up' ? `<i data-lucide="trending-up" class="w-4 h-4 text-rose-500 ml-1"></i>` : (row.trend === 'down' ? `<i data-lucide="trending-down" class="w-4 h-4 text-emerald-500 ml-1"></i>` : (row.trend === 'equal' ? `<i data-lucide="minus" class="w-4 h-4 text-gray-300 dark:text-gray-600 ml-1"></i>` : ''));
+                    const hHtml = (row.history && row.history.length > 0) ? row.history.map(h => `<div class="flex justify-between py-1 border-b border-gray-600 last:border-0 gap-4"><span>${h.month}</span><span class="font-medium text-white">${h.price} ฿</span></div>`).join('') : '<div class="text-gray-400 text-center py-1">ไม่มีข้อมูลย้อนหลัง</div>';
+                    
+                    return `
+                    <tr class="hover:bg-blue-50/50 dark:hover:bg-gray-800 transition-colors group">
+                        <td class="px-2 sm:px-4 py-3 sm:py-4 text-center"><button onclick="window.toggleFavorite('${row.id}')" class="focus:outline-none hover:scale-110 transition-transform"><i data-lucide="star" class="w-4 h-4 sm:w-5 sm:h-5 ${favoriteIds.has(row.id) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300 dark:text-gray-600 hover:text-gray-400'}"></i></button></td>
+                        <td class="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-[11px] sm:text-sm text-gray-600 dark:text-gray-300 font-medium">${row.province}</td>
+                        <td class="px-2 sm:px-4 py-3 sm:py-4"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-medium ${getColorClass(row.category, 'category')}">${row.category}</span></td>
+                        <td class="px-2 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm text-gray-900 dark:text-gray-100 leading-snug">${row.name}</td>
+                        <td class="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap"><span class="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] sm:text-[11px] font-medium ${getColorClass(row.brand, 'brand')}">${row.brand}</span></td>
+                        <td class="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-[11px] sm:text-sm text-gray-600 dark:text-gray-400 text-center">${row.unit}</td>
+                        <td class="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-right relative group/price cursor-default">
+                            <div class="flex items-center justify-end"><span class="text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-100">${row.displayPrice}</span>${row.displayPrice !== 'ไม่มีข้อมูล' ? `<span class="text-xs text-gray-500 ml-1">฿</span>` : ''}${tHtml}</div>
+                            ${row.displayMonth && els.monthFilter.value === 'latest' ? `<div class="text-[9px] sm:text-[10px] text-gray-400 mt-0.5">(${row.displayMonth})</div>` : ''}
+                            <div class="hidden md:group-hover/price:block absolute right-[95%] top-1/2 -translate-y-1/2 mr-3 w-40 bg-gray-800 text-gray-200 text-[11px] rounded-lg shadow-xl z-50 p-2.5 text-left pointer-events-none">
+                                <div class="font-semibold text-gray-100 mb-1 border-b border-gray-600 pb-1.5 flex items-center gap-1.5"><i data-lucide="history" class="w-3 h-3 text-gray-400"></i> ประวัติ 4 เดือน</div>
+                                ${hHtml}<div class="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-gray-800 transform rotate-45"></div>
+                            </div>
+                        </td>
+                    </tr>`}).join('');
             }
-            updateBrandOptions();
-            applyFilters();
-        });
-
-        firstPageBtn.addEventListener('click', () => { if (currentPage !== 1) { currentPage = 1; renderTable(); }});
-        prevPageBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderTable(); }});
-        nextPageBtn.addEventListener('click', () => { const t = Math.ceil(filteredData.length / itemsPerPage); if (currentPage < t) { currentPage++; renderTable(); }});
-        lastPageBtn.addEventListener('click', () => { const t = Math.ceil(filteredData.length / itemsPerPage) || 1; if (currentPage !== t) { currentPage = t; renderTable(); }});
-        
-        pageInput.addEventListener('change', (e) => {
-            let val = parseInt(e.target.value);
-            const t = Math.ceil(filteredData.length / itemsPerPage) || 1;
-            if (isNaN(val) || val < 1) val = 1;
-            if (val > t) val = t;
-            currentPage = val;
-            renderTable();
-        });
-        
-        pageInput.addEventListener('keyup', (e) => {
-            if (e.key === 'Enter') pageInput.blur();
-        });
-
-        itemsPerPageSelect.addEventListener('change', (e) => {
-            itemsPerPage = parseInt(e.target.value);
-            currentPage = 1;
-            renderTable();
-        });
-
-        const handleFilterChange = () => {
-            updateBrandOptions();
-            applyFilters();
+            lucide.createIcons();
         };
 
-        searchInput.addEventListener('input', handleFilterChange);
-        minSizeFilter.addEventListener('input', handleFilterChange);
-        maxSizeFilter.addEventListener('input', handleFilterChange);
-        sizeUnitFilter.addEventListener('change', handleFilterChange);
-        categoryFilter.addEventListener('change', handleFilterChange);
-        
-        brandFilter.addEventListener('change', applyFilters);
-        monthFilter.addEventListener('change', applyFilters);
-
-        fileInput.addEventListener('change', async (e) => {
-            const files = Array.from(e.target.files);
-            if (files.length === 0) return;
-            loadingIndicator.classList.remove('hidden');
-            
-            const newUploadedData = [];
-            for (const file of files) {
-                let sourceName = file.name.replace(/\.[^/.]+$/, "");
-                const provinceMatch = file.name.match(/Price_Report\s+([^\s]+)/i);
-                if (provinceMatch) sourceName = provinceMatch[1];
-
-                const text = await file.text();
-                newUploadedData.push(...processCSVData(text, sourceName));
-            }
-            appData = [...appData, ...newUploadedData];
-            loadingIndicator.classList.add('hidden');
-            fileInput.value = '';
-            updateDropdownOptions();
-            applyFilters();
-        });
-
-        exportBtn.addEventListener('click', () => {
+        // --- 6. EXPORT CSV ---
+        els.exportBtn.addEventListener('click', () => {
             if (filteredData.length === 0) return alert("ไม่มีข้อมูลสำหรับส่งออก");
-            const isLatest = monthFilter.value === 'latest';
-            const priceHeader = isLatest ? 'ราคาล่าสุด' : `ราคา (${monthFilter.value})`;
-            
-            const headers = ['พื้นที่', 'หมวดสินค้า', 'รายการ', 'ยี่ห้อ', 'หน่วย', priceHeader, 'อัปเดตเมื่อ', 'แนวโน้มเทียบเดือนก่อนหน้า'];
-            const csvRows = [headers.join(',')];
+            const mVal = els.monthFilter.value;
+            const csvRows = [['พื้นที่', 'หมวดสินค้า', 'รายการ', 'ยี่ห้อ', 'หน่วย', mVal === 'latest' ? 'ราคาล่าสุด' : `ราคา (${mVal})`, 'อัปเดตเมื่อ', 'แนวโน้มเทียบเดือนก่อนหน้า'].join(',')];
             
             filteredData.forEach(row => {
-                // ครอบข้อมูลทุกช่องด้วย " " เพื่อป้องกันปัญหาตอนมีเครื่องหมาย , ในข้อความ
-                const safeProvince = `"${String(row.province || '').replace(/"/g, '""')}"`;
-                const safeCategory = `"${String(row.category || '').replace(/"/g, '""')}"`;
-                const safeName = `"${String(row.name || '').replace(/"/g, '""')}"`;
-                const safeBrand = `"${String(row.brand || '').replace(/"/g, '""')}"`;
-                const safeUnit = `"${String(row.unit || '').replace(/"/g, '""')}"`;
-                const safePrice = `"${String(row.displayPrice || '').replace(/"/g, '""')}"`;
-                const safeMonth = `"${String(row.displayMonth || '').replace(/"/g, '""')}"`;
-                const trendText = row.trend === 'up' ? 'ราคาขึ้น' : (row.trend === 'down' ? 'ราคาลง' : 'คงที่');
-                const safeTrend = `"${trendText}"`;
-                
-                csvRows.push([safeProvince, safeCategory, safeName, safeBrand, safeUnit, safePrice, safeMonth, safeTrend].join(','));
+                csvRows.push([`"${row.province}"`, `"${row.category}"`, `"${row.name.replace(/"/g, '""')}"`, `"${row.brand}"`, `"${row.unit}"`, `"${row.displayPrice}"`, `"${row.displayMonth}"`, `"${row.trend === 'up' ? 'ราคาขึ้น' : (row.trend === 'down' ? 'ราคาลง' : 'คงที่')}"`].join(','));
             });
-            const blob = new Blob(['\uFEFF' + csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
+            
+            let catStr = els.categoryFilter.value || (filteredData.length > 0 ? ([...new Set(filteredData.map(i => i.category))].length === 1 ? filteredData[0].category : (els.searchInput.value.trim() ? els.searchInput.value.trim().split('\n')[0].substring(0, 20) : 'รวมหลายหมวด')) : 'ทุกหมวดสินค้า');
+            
             const link = document.createElement('a');
-            
-            // Generate filename based on user request format
-            const dateStr = new Date().toISOString().split('T')[0];
-            const monthStr = monthFilter.value === 'latest' ? 'latest' : monthFilter.value;
-            
-            let catStr = 'ทุกหมวดสินค้า';
-            if (categoryFilter.value) {
-                catStr = categoryFilter.value;
-            } else if (filteredData.length > 0) {
-                // หารายชื่อหมวดหมู่จากข้อมูลที่กรองได้
-                const uniqueCats = [...new Set(filteredData.map(i => i.category))].filter(Boolean);
-                if (uniqueCats.length === 1) {
-                    catStr = uniqueCats[0];
-                } else if (searchInput.value.trim() !== '') {
-                    // ถ้าหาแล้วเจอหลายหมวดหมู่ ให้ใช้คำค้นหาแรกแทนเพื่อความชัดเจน
-                    catStr = searchInput.value.trim().split('\n')[0].substring(0, 20);
-                } else {
-                    catStr = 'รวมหลายหมวด';
-                }
-            }
-            // ป้องกันการใช้ตัวอักษรต้องห้ามในการตั้งชื่อไฟล์
-            catStr = catStr.replace(/[\/\\?%*:|"<> \t]+/g, '_');
-            
-            // เพิ่ม link.href เพื่อให้สามารถดาวน์โหลดได้
-            link.href = url;
-            link.download = `Pricelist_${monthStr}_${dateStr}_${catStr}.csv`;
-            
-            document.body.appendChild(link); 
-            link.click(); 
-            document.body.removeChild(link); 
-            URL.revokeObjectURL(url);
+            link.href = URL.createObjectURL(new Blob(['\uFEFF' + csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' }));
+            link.download = `Pricelist_${mVal}_${new Date().toISOString().split('T')[0]}_${catStr.replace(/[\/\\?%*:|"<> \t]+/g, '_')}.csv`;
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
         });
 
-        clearDataBtn.addEventListener('click', () => {
-            if(confirm("คุณต้องการล้างข้อมูลทั้งหมดในตารางใช่หรือไม่?\n(รายการโปรดที่คุณบันทึกไว้จะไม่หายไป)")) {
-                appData = []; filteredData = [];
-                selectedProvinces = [];
-                currentSortOrder = 'default';
-                sortIconContainer.innerHTML = '<i data-lucide="arrow-up-down" class="w-3 h-3 text-gray-400"></i>';
-                
-                searchInput.value = ''; 
-                minSizeFilter.value = ''; maxSizeFilter.value = ''; sizeUnitFilter.value = 'any';
-                categoryFilter.value = ''; brandFilter.value = ''; monthFilter.value = 'latest';
-                
-                updateDropdownOptions(); applyFilters();
+        // --- 7. EVENT LISTENERS ---
+        const onFilterChange = () => { updateFiltersUI(); applyFilters(); };
+        els.searchInput.addEventListener('input', onFilterChange);
+        els.minSizeFilter.addEventListener('input', onFilterChange);
+        els.maxSizeFilter.addEventListener('input', onFilterChange);
+        els.sizeUnitFilter.addEventListener('change', onFilterChange);
+        els.categoryFilter.addEventListener('change', onFilterChange);
+        els.brandFilter.addEventListener('change', applyFilters);
+        els.monthFilter.addEventListener('change', applyFilters);
+
+        els.provinceBtn.addEventListener('click', (e) => { e.stopPropagation(); els.provinceMenu.classList.toggle('hidden'); });
+        document.addEventListener('click', (e) => { if (!els.provinceBtn.contains(e.target) && !els.provinceMenu.contains(e.target)) els.provinceMenu.classList.add('hidden'); });
+
+        els.sortPriceBtn.addEventListener('click', () => {
+            currentSortOrder = (currentSortOrder === 'default' || currentSortOrder === 'desc') ? 'asc' : 'desc';
+            els.sortIconContainer.innerHTML = currentSortOrder === 'asc' ? '<i data-lucide="arrow-up" class="w-3 h-3 text-blue-600 dark:text-blue-400"></i>' : '<i data-lucide="arrow-down" class="w-3 h-3 text-blue-600 dark:text-blue-400"></i>';
+            applyFilters();
+        });
+
+        els.favFilterToggle.addEventListener('change', (e) => {
+            els.favFilterIcon.className = `w-3.5 h-3.5 mr-1.5 ${e.target.checked ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300 dark:text-gray-500'}`;
+            onFilterChange();
+        });
+
+        // Pagination
+        els.firstPageBtn.addEventListener('click', () => { if (currentPage !== 1) { currentPage = 1; renderTable(); }});
+        els.prevPageBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderTable(); }});
+        els.nextPageBtn.addEventListener('click', () => { const t = Math.ceil(filteredData.length / itemsPerPage); if (currentPage < t) { currentPage++; renderTable(); }});
+        els.lastPageBtn.addEventListener('click', () => { const t = Math.ceil(filteredData.length / itemsPerPage) || 1; if (currentPage !== t) { currentPage = t; renderTable(); }});
+        els.pageInput.addEventListener('change', (e) => {
+            let v = parseInt(e.target.value), t = Math.ceil(filteredData.length / itemsPerPage) || 1;
+            currentPage = isNaN(v) || v < 1 ? 1 : (v > t ? t : v); renderTable();
+        });
+        els.pageInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') els.pageInput.blur(); });
+        els.itemsPerPageSelect.addEventListener('change', (e) => { itemsPerPage = parseInt(e.target.value); currentPage = 1; renderTable(); });
+
+        els.clearDataBtn.addEventListener('click', () => {
+            if(confirm("ต้องการล้างข้อมูลทั้งหมดใช่หรือไม่?\n(รายการโปรดจะไม่หายไป)")) {
+                appData = []; filteredData = []; selectedProvinces = []; currentSortOrder = 'default';
+                els.sortIconContainer.innerHTML = '<i data-lucide="arrow-up-down" class="w-3 h-3 text-gray-400"></i>';
+                els.searchInput.value = els.minSizeFilter.value = els.maxSizeFilter.value = ''; 
+                els.sizeUnitFilter.value = 'any'; els.categoryFilter.value = els.brandFilter.value = ''; els.monthFilter.value = 'latest';
+                updateFiltersUI(); applyFilters();
             }
         });
 
-        // --- Changelog Admin Event Listeners ---
+        els.fileInput.addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+            els.loadingIndicator.classList.remove('hidden');
+            for (const file of files) {
+                let name = file.name.replace(/\.[^/.]+$/, ""), m = file.name.match(/Price_Report\s+([^\s]+)/i);
+                appData.push(...processCSVData(await file.text(), m ? m[1] : name));
+            }
+            els.loadingIndicator.classList.add('hidden'); els.fileInput.value = '';
+            updateFiltersUI(); applyFilters();
+        });
+
+        // Theme Toggle
+        const applyTheme = () => {
+            isDarkMode ? els.html.classList.add('dark') : els.html.classList.remove('dark');
+            els.themeIcons.forEach(i => i.setAttribute('data-lucide', isDarkMode ? 'sun' : 'moon'));
+            lucide.createIcons();
+        };
+        applyTheme();
+        els.themeBtns.forEach(btn => btn.addEventListener('click', () => {
+            isDarkMode = !isDarkMode; localStorage.setItem('theme', isDarkMode ? 'dark' : 'light'); applyTheme();
+        }));
+
+        // Admin & Changelog
+        window.toggleFavorite = (id) => { favoriteIds.has(id) ? favoriteIds.delete(id) : favoriteIds.add(id); localStorage.setItem('pricelist_favorites', JSON.stringify([...favoriteIds])); renderTable(); };
         window.editChangelogItem = (idx) => {
             const item = changelogData[idx];
-            document.getElementById('editIndexInput').value = idx;
-            document.getElementById('newVersionInput').value = item.version;
-            document.getElementById('newDateInput').value = item.date;
-            document.getElementById('newChangesInput').value = item.changes.map(c => '- ' + c).join('\n');
-            document.getElementById('formTitle').innerHTML = '<i data-lucide="edit" class="w-4 h-4"></i> แก้ไขประวัติการอัปเดต';
-            document.getElementById('resetFormBtn').classList.remove('hidden');
-            lucide.createIcons();
-            document.getElementById('newVersionInput').focus();
+            els.editIndexInput.value = idx; els.newVersionInput.value = item.version; els.newDateInput.value = item.date; els.newChangesInput.value = item.changes.map(c => '- ' + c).join('\n');
+            els.formTitle.innerHTML = '<i data-lucide="edit" class="w-4 h-4"></i> แก้ไขประวัติการอัปเดต'; els.resetFormBtn.classList.remove('hidden'); lucide.createIcons(); els.newVersionInput.focus();
         };
-
         window.deleteChangelogItem = (idx) => {
-            if(confirm('ต้องการลบประวัติเวอร์ชันนี้ใช่หรือไม่?')) {
-                changelogData.splice(idx, 1);
-                localStorage.setItem('pricelist_changelog', JSON.stringify(changelogData));
-                renderAdminChangelogList();
-                renderChangelog();
-            }
+            if(confirm('ลบประวัติเวอร์ชันนี้?')) { changelogData.splice(idx, 1); localStorage.setItem('pricelist_changelog', JSON.stringify(changelogData)); renderAdminChangelogList(); renderChangelog(); }
         };
-
         const resetAdminForm = () => {
-            document.getElementById('editIndexInput').value = "-1";
-            document.getElementById('newVersionInput').value = '';
-            
-            const today = new Date();
-            const thaiYear = today.getFullYear() + 543;
-            document.getElementById('newDateInput').value = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${thaiYear.toString().slice(-2)}`;
-            
-            document.getElementById('newChangesInput').value = '';
-            document.getElementById('formTitle').innerHTML = '<i data-lucide="pen-line" class="w-4 h-4"></i> เพิ่มประวัติใหม่';
-            document.getElementById('resetFormBtn').classList.add('hidden');
-            lucide.createIcons();
+            els.editIndexInput.value = "-1"; els.newVersionInput.value = els.newChangesInput.value = '';
+            const t = new Date(); els.newDateInput.value = `${t.getDate().toString().padStart(2, '0')}/${(t.getMonth() + 1).toString().padStart(2, '0')}/${(t.getFullYear() + 543).toString().slice(-2)}`;
+            els.formTitle.innerHTML = '<i data-lucide="pen-line" class="w-4 h-4"></i> เพิ่มประวัติใหม่'; els.resetFormBtn.classList.add('hidden'); lucide.createIcons();
         };
-
-        document.getElementById('resetFormBtn').addEventListener('click', resetAdminForm);
-
-        changelogBtn.addEventListener('click', () => {
-            renderChangelog();
-            changelogViewMode.classList.remove('hidden');
-            changelogEditMode.classList.add('hidden');
-            changelogModal.classList.remove('hidden');
+        els.resetFormBtn.addEventListener('click', resetAdminForm);
+        els.changelogBtns.forEach(btn => btn.addEventListener('click', () => { renderChangelog(); els.changelogViewMode.classList.remove('hidden'); els.changelogEditMode.classList.add('hidden'); els.changelogModal.classList.remove('hidden'); }));
+        els.closeChangelogBtn.addEventListener('click', () => els.changelogModal.classList.add('hidden'));
+        els.changelogModal.addEventListener('click', (e) => { if (e.target === els.changelogModal) els.changelogModal.classList.add('hidden'); });
+        els.adminEditBtn.addEventListener('click', () => {
+            const pwd = prompt("ระบบจัดการ Changelog\nรหัสผ่าน Admin:");
+            if (pwd === "1212312121") { els.changelogViewMode.classList.add('hidden'); els.changelogEditMode.classList.remove('hidden'); resetAdminForm(); renderAdminChangelogList(); } 
+            else if (pwd !== null) alert("รหัสผ่านไม่ถูกต้อง");
         });
-
-        // ปุ่มบน Desktop
-        if(changelogBtnDesktop) {
-            changelogBtnDesktop.addEventListener('click', () => {
-                renderChangelog();
-                changelogViewMode.classList.remove('hidden');
-                changelogEditMode.classList.add('hidden');
-                changelogModal.classList.remove('hidden');
-            });
-        }
-
-        closeChangelogBtn.addEventListener('click', () => {
-            changelogModal.classList.add('hidden');
-        });
-
-        changelogModal.addEventListener('click', (e) => {
-            if (e.target === changelogModal) changelogModal.classList.add('hidden');
-        });
-
-        adminEditBtn.addEventListener('click', () => {
-            const pwd = prompt("ระบบจัดการ Changelog\nกรุณาใส่รหัสผ่าน Admin:");
-            if (pwd === "1212312121") {
-                changelogViewMode.classList.add('hidden');
-                changelogEditMode.classList.remove('hidden');
-                resetAdminForm();
-                renderAdminChangelogList();
-            } else if (pwd !== null) {
-                alert("รหัสผ่านไม่ถูกต้อง การเข้าถึงถูกปฏิเสธ");
-            }
-        });
-
-        cancelEditBtn.addEventListener('click', () => {
-            changelogViewMode.classList.remove('hidden');
-            changelogEditMode.classList.add('hidden');
-        });
-
-        saveChangelogBtn.addEventListener('click', () => {
-            const editIdx = parseInt(document.getElementById('editIndexInput').value);
-            const ver = document.getElementById('newVersionInput').value.trim();
-            const date = document.getElementById('newDateInput').value.trim();
-            const changesTxt = document.getElementById('newChangesInput').value.trim();
-
-            if(!ver || !date || !changesTxt) {
-                alert("กรุณากรอกข้อมูล Version, วันที่ และรายละเอียดให้ครบถ้วน");
-                return;
-            }
-
-            const changesList = changesTxt.split('\n')
-                .map(c => c.trim().replace(/^- /, '')) 
-                .filter(c => c !== '');
-            
-            const newItem = { version: ver, date: date, changes: changesList };
-            
-            if (editIdx > -1) {
-                changelogData[editIdx] = newItem; // อัปเดตของเดิม
-            } else {
-                changelogData.unshift(newItem); // เพิ่มใหม่ไว้บนสุด
-            }
-            
+        els.cancelEditBtn.addEventListener('click', () => { els.changelogViewMode.classList.remove('hidden'); els.changelogEditMode.classList.add('hidden'); });
+        els.saveChangelogBtn.addEventListener('click', () => {
+            const idx = parseInt(els.editIndexInput.value), ver = els.newVersionInput.value.trim(), date = els.newDateInput.value.trim(), txt = els.newChangesInput.value.trim();
+            if(!ver || !date || !txt) return alert("กรอกข้อมูลให้ครบถ้วน");
+            const item = { version: ver, date: date, changes: txt.split('\n').map(c => c.trim().replace(/^- /, '')).filter(c => c !== '') };
+            idx > -1 ? changelogData[idx] = item : changelogData.unshift(item);
             localStorage.setItem('pricelist_changelog', JSON.stringify(changelogData));
-            
-            resetAdminForm();
-            renderAdminChangelogList();
-            renderChangelog();
+            resetAdminForm(); renderAdminChangelogList(); renderChangelog();
         });
 
-        // --- 8. App Init ---
-        appData = loadInitialData();
-        renderChangelog(); 
-        updateDropdownOptions();
-        applyFilters();
-
-        // --- 9. Resizable Columns Init (Touch/Mouse Support) ---
+        // --- 8. INITIALIZE ---
         const makeTableResizable = () => {
-            const cols = document.querySelectorAll('table th');
-            cols.forEach(col => {
-                // ป้องกันการสร้างตัว resize ทับซ้อน
+            document.querySelectorAll('table th').forEach(col => {
                 if (col.querySelector('.resizer-handle')) return;
-                
                 col.classList.add('relative');
-                const resizer = document.createElement('div');
-                // สร้างตัวลากที่ขอบขวาของแต่ละคอลัมน์ เพิ่มพื้นที่สัมผัสให้กว้างขึ้นเล็กน้อยเพื่อมือง่ายบนมือถือ
-                resizer.classList.add('resizer-handle', 'absolute', 'right-0', 'top-0', 'bottom-0', 'w-3', 'translate-x-1.5', 'cursor-col-resize', 'hover:bg-blue-400/50', 'z-10', 'transition-colors');
-                
-                // ขีดเส้นแบ่งให้เห็นชัดว่าย่อขยายได้
-                const indicator = document.createElement('div');
-                indicator.classList.add('absolute', 'left-1/2', 'top-1/4', 'bottom-1/4', 'w-px', 'bg-gray-300', 'group-hover:bg-blue-400');
-                resizer.appendChild(indicator);
-                
-                col.appendChild(resizer);
-
-                let x = 0;
-                let w = 0;
-
+                const resizer = document.createElement('div'), indicator = document.createElement('div');
+                resizer.className = 'resizer-handle absolute right-0 top-0 bottom-0 w-3 translate-x-1.5 cursor-col-resize hover:bg-blue-400/50 z-10 transition-colors';
+                indicator.className = 'absolute left-1/2 top-1/4 bottom-1/4 w-px bg-gray-300 dark:bg-gray-600 group-hover:bg-blue-400';
+                resizer.appendChild(indicator); col.appendChild(resizer);
+                let x = 0, w = 0;
                 const startDrag = (e) => {
-                    e.stopPropagation(); 
-                    // รองรับทั้งการสัมผัส (Touch) และการคลิกเมาส์ (Mouse)
-                    x = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-                    const styles = window.getComputedStyle(col);
-                    w = parseInt(styles.width, 10);
-                    
-                    document.addEventListener('mousemove', doDrag);
-                    // passive: false เพื่อป้องกันไม่ให้หน้าจอเลื่อนไปมาเวลาสัมผัสยืดคอลัมน์
-                    document.addEventListener('touchmove', doDrag, { passive: false });
-                    document.addEventListener('mouseup', stopDrag);
-                    document.addEventListener('touchend', stopDrag);
+                    e.stopPropagation(); x = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX; w = parseInt(window.getComputedStyle(col).width, 10);
+                    document.addEventListener('mousemove', doDrag); document.addEventListener('touchmove', doDrag, { passive: false });
+                    document.addEventListener('mouseup', stopDrag); document.addEventListener('touchend', stopDrag);
                     resizer.classList.add('bg-blue-400/50');
                 };
-
                 const doDrag = (e) => {
-                    const currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-                    const dx = currentX - x;
-                    col.style.width = `${w + dx}px`;
-                    col.style.minWidth = `${w + dx}px`;
+                    const cx = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+                    col.style.width = col.style.minWidth = `${w + (cx - x)}px`;
                 };
-
                 const stopDrag = () => {
-                    document.removeEventListener('mousemove', doDrag);
-                    document.removeEventListener('touchmove', doDrag);
-                    document.removeEventListener('mouseup', stopDrag);
-                    document.removeEventListener('touchend', stopDrag);
+                    document.removeEventListener('mousemove', doDrag); document.removeEventListener('touchmove', doDrag);
+                    document.removeEventListener('mouseup', stopDrag); document.removeEventListener('touchend', stopDrag);
                     resizer.classList.remove('bg-blue-400/50');
                 };
-
-                resizer.addEventListener('mousedown', startDrag);
-                resizer.addEventListener('touchstart', startDrag, { passive: true });
-                resizer.addEventListener('click', (e) => e.stopPropagation()); 
+                resizer.addEventListener('mousedown', startDrag); resizer.addEventListener('touchstart', startDrag, { passive: true });
+                resizer.addEventListener('click', (e) => e.stopPropagation());
             });
         };
-        
-        // เรียกใช้งานให้สามารถย่อขยายคอลัมน์ได้หลังเรนเดอร์ครั้งแรก
+
+        appData = loadInitialData();
+        renderChangelog(); 
+        updateFiltersUI();
+        applyFilters();
         makeTableResizable();
 
     </script>
