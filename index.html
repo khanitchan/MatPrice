@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ระบบค้นหาราคาวัสดุก่อสร้าง</title>
+    <title>Pricelist วัสดุก่อสร้างระดับโปร</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -45,7 +45,7 @@
             <div class="px-4 py-3 sm:px-6 sm:py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 z-10 shrink-0 transition-colors">
                 <div class="w-full flex justify-between items-center md:block">
                     <div>
-                        <h1 class="text-lg sm:text-xl font-bold text-blue-900 dark:text-blue-400">Pricelist วัสดุก่อสร้าง อ้างอิง สำนักงานนโยบายและยุทธศาสตร์การค้า</h1>
+                        <h1 class="text-lg sm:text-xl font-bold text-blue-900 dark:text-blue-400">Pricelist วัสดุก่อสร้าง</h1>
                         <p class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
                             ทั้งหมด <span id="totalRecordCount" class="font-semibold text-blue-600 dark:text-blue-400">0</span> รายการ
                             <span id="loadingIndicator" class="text-blue-500 dark:text-blue-400 font-medium animate-pulse hidden ml-1">(กำลังประมวลผล...)</span>
@@ -97,91 +97,84 @@
                 </div>
             </div>
 
-            <!-- FILTERS PANEL -->
-            <div class="px-4 py-2 sm:px-6 sm:py-3 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700 flex flex-col gap-2 z-10 shrink-0">
-                <!-- แถวที่ 1: ค้นหา และ ขนาด -->
-                <div class="flex flex-col md:flex-row gap-2 w-full">
-                    <div class="flex-1 relative min-w-0">
-                        <div class="absolute top-2.5 left-0 pl-2.5 flex items-center pointer-events-none">
-                            <i data-lucide="search" class="h-4 w-4 text-gray-400 dark:text-gray-500"></i>
-                        </div>
-                        <textarea id="searchInput" rows="1" placeholder="พิมพ์ค้นหาปกติ หรือวางข้อมูล BOQ หลายบรรทัดที่นี่..." class="block w-full pl-8 pr-2.5 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg leading-snug bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm transition-all shadow-sm resize-y min-h-[34px]"></textarea>
-                    </div>
-
-                    <div class="flex items-center gap-1.5 w-full md:w-auto relative shrink-0">
-                        <div class="hidden sm:flex absolute inset-y-0 left-0 pl-2 items-center pointer-events-none z-10">
-                            <i data-lucide="ruler" class="h-3.5 w-3.5 text-gray-400 dark:text-gray-500"></i>
-                        </div>
-                        <input type="number" id="minSizeFilter" placeholder="ต่ำสุด" class="block w-1/3 md:w-20 pl-2 sm:pl-7 pr-1 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm" step="0.1">
-                        <span class="text-gray-400 dark:text-gray-500 font-medium text-xs">-</span>
-                        <input type="number" id="maxSizeFilter" placeholder="สูงสุด" class="block w-1/3 md:w-20 px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm" step="0.1">
-                        <select id="sizeUnitFilter" class="block w-1/3 md:w-24 px-1 sm:px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm appearance-none">
-                            <option value="any">ระบุหน่วย</option>
-                            <option value="inch">นิ้ว</option>
-                            <option value="mm">มม.</option>
-                            <option value="sqmm">ตร.มม.</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- แถวที่ 2: หมวด, ยี่ห้อ, จังหวัด, เดือน และ Favorite -->
-                <div class="grid grid-cols-2 md:flex md:flex-row gap-2 w-full items-center">
-                    <div class="w-full md:flex-1 relative min-w-0">
-                        <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none"><i data-lucide="filter" class="h-3.5 w-3.5 text-gray-400 dark:text-gray-500"></i></div>
-                        <select id="categoryFilter" class="block w-full pl-7 pr-4 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm appearance-none truncate">
-                            <option value="">ทุกหมวดสินค้า</option>
-                        </select>
-                    </div>
-
-                    <div class="w-full md:flex-1 relative min-w-0">
-                        <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none"><i data-lucide="tag" class="h-3.5 w-3.5 text-gray-400 dark:text-gray-500"></i></div>
-                        <select id="brandFilter" class="block w-full pl-7 pr-4 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm appearance-none truncate">
-                            <option value="">ทุกยี่ห้อ</option>
-                        </select>
-                    </div>
-
-                    <div class="w-full md:flex-1 relative min-w-0">
-                        <button id="provinceDropdownBtn" class="flex justify-between items-center w-full px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm transition-all text-left">
-                            <span id="provinceDropdownText" class="truncate">ทุกพื้นที่</span>
-                            <i data-lucide="chevron-down" class="h-3.5 w-3.5 text-gray-400 dark:text-gray-500 shrink-0"></i>
-                        </button>
-                        <div id="provinceDropdownMenu" class="hidden absolute left-0 z-50 mt-1 w-full sm:w-[220px] bg-white dark:bg-gray-800 shadow-lg max-h-60 rounded-md py-1 ring-1 ring-black ring-opacity-5 dark:ring-gray-700 overflow-auto"></div>
-                    </div>
-
-                    <div class="w-full md:flex-1 relative min-w-0">
-                        <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none"><i data-lucide="calendar" class="h-3.5 w-3.5 text-gray-400 dark:text-gray-500"></i></div>
-                        <select id="monthFilter" class="block w-full pl-7 pr-4 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm shadow-sm appearance-none truncate">
-                            <option value="latest">ราคาล่าสุด</option>
-                            <option value="ม.ค.">มกราคม</option><option value="ก.พ.">กุมภาพันธ์</option><option value="มี.ค.">มีนาคม</option><option value="เม.ย.">เมษายน</option><option value="พ.ค.">พฤษภาคม</option><option value="มิ.ย.">มิถุนายน</option><option value="ก.ค.">กรกฎาคม</option><option value="ส.ค.">สิงหาคม</option><option value="ก.ย.">กันยายน</option><option value="ต.ค.">ตุลาคม</option><option value="พ.ย.">พฤศจิกายน</option><option value="ธ.ค.">ธันวาคม</option>
-                        </select>
-                    </div>
-
-                    <label class="col-span-2 md:col-span-1 flex items-center justify-center cursor-pointer md:ml-auto w-full md:w-auto shrink-0 bg-white dark:bg-gray-800 px-2.5 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm hover:bg-yellow-50 dark:hover:bg-gray-700 transition-colors">
-                        <input type="checkbox" id="favFilterToggle" class="hidden">
-                        <i data-lucide="star" id="favFilterIcon" class="w-3.5 h-3.5 text-gray-300 dark:text-gray-500 mr-1.5"></i>
-                        <span class="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">เฉพาะรายการโปรด</span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- TABLE AREA -->
+            <!-- TABLE AREA WITH INLINE FILTERS -->
             <div class="flex-1 overflow-x-auto overflow-y-auto bg-white dark:bg-gray-900 relative">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-fixed">
-                    <thead class="bg-gray-100 dark:bg-gray-800 sticky top-0 z-0 shadow-sm dark:shadow-gray-900">
+                    <thead class="bg-gray-100 dark:bg-gray-800 sticky top-0 z-20 shadow-sm dark:shadow-gray-900 align-top">
                         <tr>
-                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 w-10 sm:w-12 text-center text-gray-400 dark:text-gray-500">
-                                <i data-lucide="star" class="w-3.5 h-3.5 sm:w-4 sm:h-4 mx-auto"></i>
+                            <!-- 1. Star / Favorite -->
+                            <th scope="col" class="px-2 sm:px-3 py-2 w-12 sm:w-14 text-center align-top border-b border-gray-200 dark:border-gray-700 pt-3">
+                                <label class="cursor-pointer flex flex-col items-center justify-center gap-1.5" title="กรองเฉพาะรายการโปรด">
+                                    <input type="checkbox" id="favFilterToggle" class="hidden">
+                                    <i data-lucide="star" id="favFilterIcon" class="w-4 h-4 text-gray-300 dark:text-gray-500 hover:text-yellow-500 transition-colors mt-0.5"></i>
+                                    <span class="text-[9px] font-medium text-gray-500 dark:text-gray-400 mt-1">เฉพาะดาว</span>
+                                </label>
                             </th>
-                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider w-24">พื้นที่</th>
-                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider w-36 sm:w-40">หมวดสินค้า</th>
-                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider min-w-[200px] w-auto">รายการ</th>
-                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider w-28 sm:w-32">ยี่ห้อ</th>
-                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 text-center text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider w-16 sm:w-20">หน่วย</th>
-                            <th scope="col" class="px-2 sm:px-4 py-2 sm:py-3 text-right text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider w-32 sm:w-40 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors select-none" id="sortPriceBtn" title="คลิกเพื่อเรียงลำดับราคา">
-                                <div class="flex items-center justify-end gap-1">
-                                    ราคา <span id="priceHeaderMonth" class="text-[9px] sm:text-[10px] text-gray-400 dark:text-gray-500 font-normal"></span>
-                                    <span id="sortIconContainer" class="inline-flex"><i data-lucide="arrow-up-down" class="w-3 h-3 text-gray-400 dark:text-gray-500"></i></span>
+                            
+                            <!-- 2. Province -->
+                            <th scope="col" class="px-2 sm:px-3 py-2 text-left w-32 sm:w-40 align-top border-b border-gray-200 dark:border-gray-700">
+                                <div class="text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-1.5 flex items-center h-4">พื้นที่</div>
+                                <div class="relative w-full">
+                                    <button id="provinceDropdownBtn" class="flex justify-between items-center w-full px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 text-[11px] sm:text-xs shadow-sm transition-all text-left font-normal h-[28px]">
+                                        <span id="provinceDropdownText" class="truncate">ทุกพื้นที่</span>
+                                        <i data-lucide="chevron-down" class="w-3 h-3 text-gray-400 shrink-0 ml-1"></i>
+                                    </button>
+                                    <div id="provinceDropdownMenu" class="hidden absolute left-0 z-50 mt-1 w-[200px] bg-white dark:bg-gray-800 shadow-xl rounded-md py-1 ring-1 ring-black ring-opacity-5 dark:ring-gray-700 overflow-auto text-left font-normal max-h-60"></div>
                                 </div>
+                            </th>
+
+                            <!-- 3. Category -->
+                            <th scope="col" class="px-2 sm:px-3 py-2 text-left w-40 sm:w-48 align-top border-b border-gray-200 dark:border-gray-700">
+                                <div class="text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-1.5 flex items-center h-4">หมวดสินค้า</div>
+                                <select id="categoryFilter" class="block w-full px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-500 text-[11px] sm:text-xs shadow-sm font-normal truncate h-[28px]">
+                                    <option value="">ทุกหมวดสินค้า</option>
+                                </select>
+                            </th>
+
+                            <!-- 4. Search & Size -->
+                            <th scope="col" class="px-2 sm:px-3 py-2 text-left min-w-[260px] w-auto align-top border-b border-gray-200 dark:border-gray-700">
+                                <div class="text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-1.5 flex items-center h-4">รายการ / กรองขนาด</div>
+                                <div class="flex flex-col gap-1.5">
+                                    <div class="relative w-full">
+                                        <i data-lucide="search" class="absolute top-1.5 left-2 w-3.5 h-3.5 text-gray-400 pointer-events-none"></i>
+                                        <textarea id="searchInput" rows="1" placeholder="พิมพ์ค้นหาปกติ หรือวางข้อมูล BOQ..." class="block w-full pl-7 pr-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 text-[11px] sm:text-xs shadow-sm resize-y min-h-[28px] font-normal leading-tight"></textarea>
+                                    </div>
+                                    <div class="flex gap-1 w-full">
+                                        <input type="number" id="minSizeFilter" placeholder="ต่ำสุด" class="w-1/3 px-1.5 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-500 text-[10px] sm:text-xs shadow-sm font-normal h-[24px]">
+                                        <input type="number" id="maxSizeFilter" placeholder="สูงสุด" class="w-1/3 px-1.5 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-500 text-[10px] sm:text-xs shadow-sm font-normal h-[24px]">
+                                        <select id="sizeUnitFilter" class="w-1/3 px-1 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-500 text-[10px] sm:text-xs shadow-sm font-normal text-center h-[24px]">
+                                            <option value="any">หน่วย</option>
+                                            <option value="inch">นิ้ว</option>
+                                            <option value="mm">มม.</option>
+                                            <option value="sqmm">ตร.มม.</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </th>
+
+                            <!-- 5. Brand -->
+                            <th scope="col" class="px-2 sm:px-3 py-2 text-left w-32 sm:w-40 align-top border-b border-gray-200 dark:border-gray-700">
+                                <div class="text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-1.5 flex items-center h-4">ยี่ห้อ</div>
+                                <select id="brandFilter" class="block w-full px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-500 text-[11px] sm:text-xs shadow-sm font-normal truncate h-[28px]">
+                                    <option value="">ทุกยี่ห้อ</option>
+                                </select>
+                            </th>
+
+                            <!-- 6. Unit -->
+                            <th scope="col" class="px-2 sm:px-3 py-2 text-center w-16 sm:w-20 align-top border-b border-gray-200 dark:border-gray-700">
+                                <div class="text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-1.5 flex justify-center items-center h-4">หน่วย</div>
+                            </th>
+
+                            <!-- 7. Price & Month Select -->
+                            <th scope="col" class="px-2 sm:px-3 py-2 text-right w-32 sm:w-40 align-top border-b border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center justify-end gap-1 mb-1.5 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 rounded px-1 -mx-1 h-4" id="sortPriceBtn" title="คลิกเพื่อเรียงลำดับราคา">
+                                    <span class="text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">ราคา</span>
+                                    <span id="sortIconContainer" class="inline-flex"><i data-lucide="arrow-up-down" class="w-3 h-3 text-gray-400"></i></span>
+                                </div>
+                                <select id="monthFilter" class="block w-full pl-2 pr-6 py-1.5 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-500 text-[11px] sm:text-xs shadow-sm font-normal appearance-none h-[28px]" style="background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%239CA3AF%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 0.25rem center; background-size: 1em 1em;">
+                                    <option value="latest">ราคาล่าสุด</option>
+                                    <option value="ม.ค.">มกราคม</option><option value="ก.พ.">กุมภาพันธ์</option><option value="มี.ค.">มีนาคม</option><option value="เม.ย.">เมษายน</option><option value="พ.ค.">พฤษภาคม</option><option value="มิ.ย.">มิถุนายน</option><option value="ก.ค.">กรกฎาคม</option><option value="ส.ค.">สิงหาคม</option><option value="ก.ย.">กันยายน</option><option value="ต.ค.">ตุลาคม</option><option value="พ.ย.">พฤศจิกายน</option><option value="ธ.ค.">ธันวาคม</option>
+                                </select>
                             </th>
                         </tr>
                     </thead>
@@ -5971,7 +5964,6 @@
             provinceMenu: document.getElementById('provinceDropdownMenu'),
             sortPriceBtn: document.getElementById('sortPriceBtn'),
             sortIconContainer: document.getElementById('sortIconContainer'),
-            priceHeaderMonth: document.getElementById('priceHeaderMonth'),
             
             // Pagination
             prevPageBtn: document.getElementById('prevPageBtn'),
@@ -6338,8 +6330,6 @@
             const cat = els.categoryFilter.value, brand = els.brandFilter.value, tMonth = els.monthFilter.value, isFavOnly = els.favFilterToggle.checked;
             const minSize = parseFloat(els.minSizeFilter.value), maxSize = parseFloat(els.maxSizeFilter.value), tUnit = els.sizeUnitFilter.value;
             const kwGroups = getSearchKeywordGroups();
-            
-            els.priceHeaderMonth.textContent = tMonth === 'latest' ? '' : `(${tMonth})`;
 
             filteredData = appData.filter(item => {
                 if (isFavOnly && !favoriteIds.has(item.id)) return false;
@@ -6415,11 +6405,11 @@
                         <td class="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-[11px] sm:text-sm text-gray-600 dark:text-gray-300 font-medium">${row.province}</td>
                         <td class="px-2 sm:px-4 py-3 sm:py-4"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-medium ${getColorClass(row.category, 'category')}">${row.category}</span></td>
                         <td class="px-2 sm:px-4 py-3 sm:py-4 text-[11px] sm:text-sm text-gray-900 dark:text-gray-100 leading-snug">${row.name}</td>
-                        <td class="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap"><span class="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] sm:text-[11px] font-medium ${getColorClass(row.brand, 'brand')}">${row.brand}</span></td>
+                        <td class="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap"><span class="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] sm:text-[11px] font-medium ${getColorClass(row.filterBrand, 'brand')}">${row.brand}</span></td>
                         <td class="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-[11px] sm:text-sm text-gray-600 dark:text-gray-400 text-center">${row.unit}</td>
                         <td class="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-right relative group/price cursor-default">
                             <div class="flex items-center justify-end"><span class="text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-100">${row.displayPrice}</span>${row.displayPrice !== 'ไม่มีข้อมูล' ? `<span class="text-xs text-gray-500 ml-1">฿</span>` : ''}${tHtml}</div>
-                            ${row.displayMonth && els.monthFilter.value === 'latest' ? `<div class="text-[9px] sm:text-[10px] text-gray-400 mt-0.5">(${row.displayMonth})</div>` : ''}
+                            <!-- Removed absolute month text below price since user selects it globally in header now -->
                             <div class="hidden md:group-hover/price:block absolute right-[95%] top-1/2 -translate-y-1/2 mr-3 w-40 bg-gray-800 text-gray-200 text-[11px] rounded-lg shadow-xl z-50 p-2.5 text-left pointer-events-none">
                                 <div class="font-semibold text-gray-100 mb-1 border-b border-gray-600 pb-1.5 flex items-center gap-1.5"><i data-lucide="history" class="w-3 h-3 text-gray-400"></i> ประวัติ 4 เดือน</div>
                                 ${hHtml}<div class="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-gray-800 transform rotate-45"></div>
