@@ -5938,7 +5938,10 @@
             { version: "V.1.1", date: "30/05/69", changes: ["เพิ่มระบบให้ Admin แก้ไขประวัติย้อนหลังได้", "ปรับให้รองรับมือถือ (Mobile Responsive)", "เพิ่มฟีเจอร์ปรับขนาดคอลัมน์ตาราง"] },
             { version: "V.1.0", date: "30/05/69", changes: ["เปิดตัวระบบ Pricelist วัสดุก่อสร้าง (Pro)"] }
         ];
-        let changelogData = JSON.parse(localStorage.getItem('pricelist_changelog')) || defaultChangelog;
+          // --- จุดที่แก้ไข: ถอด localStorage ออกและเปลี่ยนเป็นระบบ API คลาวด์ ---
+        const CHANGELOG_API_URL = "https://script.google.com/macros/s/AKfycbxJJnHY21IFqcQvZnXbAamemYUPnQxsPZL-ZxlGSZHl-BB2FdbyONqiBK8oBd12Mp73/exec"; // 🔴 นำ URL ที่คัดลอกมาจาก Apps Script มาใส่ตรงนี้
+        let changelogData = []; 
+        let isChangelogLoading = true;
 
         // --- 2. DOM ELEMENTS MAPPING ---
         const els = {
@@ -6532,38 +6535,117 @@
             isDarkMode = !isDarkMode; localStorage.setItem('theme', isDarkMode ? 'dark' : 'light'); applyTheme();
         }));
 
-        // Admin & Changelog
+        // Admin & Changelog (ระบบ Cloud)
         window.toggleFavorite = (id) => { favoriteIds.has(id) ? favoriteIds.delete(id) : favoriteIds.add(id); localStorage.setItem('pricelist_favorites', JSON.stringify([...favoriteIds])); renderTable(); };
+        
+        // ฟังก์ชันดึงข้อมูลจาก Cloud ตอนเปิดเว็บ
+        const fetchChangelogFromCloud = async () => {
+            try {
+                if(!CHANGELOG_API_URL || CHANGELOG_API_URL.includes('xxxxxxxxxxxxxxx')) {
+                    console.warn("ยังไม่ได้ใส่ API URL สำหรับ Changelog หรือตั้งค่าไม่ถูกต้อง จะแสดงเป็นออฟไลน์");
+                    changelogData = defaultChangelog;
+                    renderChangelog();
+                    return;
+                }
+                els.headerVersionText.textContent = "กำลังโหลด...";
+                const response = await fetch(CHANGELOG_API_URL);
+                const result = await response.json();
+                
+                if(result.status === 'success') {
+                    changelogData = result.data;
+                    renderChangelog();
+                    renderAdminChangelogList();
+                } else {
+                    changelogData = defaultChangelog;
+                    renderChangelog();
+                }
+            } catch (err) {
+                console.error("โหลด Changelog ไม่สำเร็จ:", err);
+                changelogData = defaultChangelog;
+                renderChangelog();
+                els.headerVersionText.textContent = "Offline Mode";
+            } finally {
+                isChangelogLoading = false;
+            }
+        };
+
+        // ฟังก์ชันบันทึกข้อมูลขึ้น Cloud
+        const saveChangelogToCloud = async (newData) => {
+            const originalData = [...changelogData];
+            changelogData = newData; // อัปเดต UI ทันทีให้ดูตอบสนองเร็ว
+            renderChangelog();
+            renderAdminChangelogList();
+            
+            try {
+                els.saveChangelogBtn.textContent = "กำลังบันทึก...";
+                els.saveChangelogBtn.disabled = true;
+                
+                const response = await fetch(CHANGELOG_API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(newData)
+                });
+                const result = await response.json();
+                
+                if(result.status !== 'success') throw new Error(result.message);
+                alert("บันทึกประวัติสำเร็จ และอัพเดตสำหรับผู้ใช้งานทุกคนแล้วครับ!");
+                
+            } catch (err) {
+                console.error("เซฟไม่สำเร็จ:", err);
+                alert("เกิดข้อผิดพลาดในการบันทึกข้อมูลลง Database");
+                changelogData = originalData; // Rollback ถ้าพัง
+                renderChangelog();
+                renderAdminChangelogList();
+            } finally {
+                els.saveChangelogBtn.textContent = "บันทึกข้อมูล";
+                els.saveChangelogBtn.disabled = false;
+            }
+        };
+
         window.editChangelogItem = (idx) => {
             const item = changelogData[idx];
             els.editIndexInput.value = idx; els.newVersionInput.value = item.version; els.newDateInput.value = item.date; els.newChangesInput.value = item.changes.map(c => '- ' + c).join('\n');
             els.formTitle.innerHTML = '<i data-lucide="edit" class="w-4 h-4"></i> แก้ไขประวัติการอัปเดต'; els.resetFormBtn.classList.remove('hidden'); lucide.createIcons(); els.newVersionInput.focus();
         };
-        window.deleteChangelogItem = (idx) => {
-            if(confirm('ลบประวัติเวอร์ชันนี้?')) { changelogData.splice(idx, 1); localStorage.setItem('pricelist_changelog', JSON.stringify(changelogData)); renderAdminChangelogList(); renderChangelog(); }
+
+        window.deleteChangelogItem = async (idx) => {
+            if(confirm('ต้องการลบประวัติเวอร์ชันนี้ใช่หรือไม่?')) {
+                const newData = [...changelogData];
+                newData.splice(idx, 1);
+                await saveChangelogToCloud(newData);
+            }
         };
+        
         const resetAdminForm = () => {
             els.editIndexInput.value = "-1"; els.newVersionInput.value = els.newChangesInput.value = '';
             const t = new Date(); els.newDateInput.value = `${t.getDate().toString().padStart(2, '0')}/${(t.getMonth() + 1).toString().padStart(2, '0')}/${(t.getFullYear() + 543).toString().slice(-2)}`;
             els.formTitle.innerHTML = '<i data-lucide="pen-line" class="w-4 h-4"></i> เพิ่มประวัติใหม่'; els.resetFormBtn.classList.add('hidden'); lucide.createIcons();
         };
+        
         els.resetFormBtn.addEventListener('click', resetAdminForm);
         els.changelogBtns.forEach(btn => btn.addEventListener('click', () => { renderChangelog(); els.changelogViewMode.classList.remove('hidden'); els.changelogEditMode.classList.add('hidden'); els.changelogModal.classList.remove('hidden'); }));
         els.closeChangelogBtn.addEventListener('click', () => els.changelogModal.classList.add('hidden'));
         els.changelogModal.addEventListener('click', (e) => { if (e.target === els.changelogModal) els.changelogModal.classList.add('hidden'); });
+        
         els.adminEditBtn.addEventListener('click', () => {
             const pwd = prompt("ระบบจัดการ Changelog\nรหัสผ่าน Admin:");
             if (pwd === "1212312121") { els.changelogViewMode.classList.add('hidden'); els.changelogEditMode.classList.remove('hidden'); resetAdminForm(); renderAdminChangelogList(); } 
             else if (pwd !== null) alert("รหัสผ่านไม่ถูกต้อง");
         });
+        
         els.cancelEditBtn.addEventListener('click', () => { els.changelogViewMode.classList.remove('hidden'); els.changelogEditMode.classList.add('hidden'); });
-        els.saveChangelogBtn.addEventListener('click', () => {
+        
+        els.saveChangelogBtn.addEventListener('click', async () => {
             const idx = parseInt(els.editIndexInput.value), ver = els.newVersionInput.value.trim(), date = els.newDateInput.value.trim(), txt = els.newChangesInput.value.trim();
             if(!ver || !date || !txt) return alert("กรอกข้อมูลให้ครบถ้วน");
+            
             const item = { version: ver, date: date, changes: txt.split('\n').map(c => c.trim().replace(/^- /, '')).filter(c => c !== '') };
-            idx > -1 ? changelogData[idx] = item : changelogData.unshift(item);
-            localStorage.setItem('pricelist_changelog', JSON.stringify(changelogData));
-            resetAdminForm(); renderAdminChangelogList(); renderChangelog();
+            const newData = [...changelogData];
+            
+            if (idx > -1) newData[idx] = item;
+            else newData.unshift(item);
+            
+            await saveChangelogToCloud(newData);
+            resetAdminForm();
         });
 
         // --- 8. INITIALIZE ---
